@@ -1,5 +1,7 @@
 #include <iostream>
+#include <stack>
 #include <list>
+
 struct Node {
     Node(int val = 0, Node* next = nullptr) : val_{val}, next_{next} {}
     int val_;
@@ -20,20 +22,27 @@ public:
             Node* node_;
     };
 
+    ~LinkedList() { clear(); }
     size_t size() const;
     bool empty() const;
     void pushFront(int val); 
     void popFront();
     void pushBack(int val);
     void popBack();
-    int front();
-    int back();
+    int& front();
+    int& back();
     void clear();
     void reverse();
+    void reverseRecursively() { reverseRecursively(head_); }
+    void print() const { print(head_); }
+    void printReverse() const { printReverse(head_); }
 
     Iterator begin() { return Iterator(head_); }
     Iterator end() { return Iterator(); }
 private:
+    void print(Node* head) const;
+    void printReverse(Node* head) const;
+    void reverseRecursively(Node* node);
     Node* head_ = nullptr;
 };
 
@@ -94,22 +103,83 @@ void LinkedList::popBack() {
     it->next_ = nullptr;
 }
 
+int& LinkedList::front() {
+    return head_->val_;
+}
+
+int& LinkedList::back() {
+    Node* it = head_;
+    while(it->next_) {
+        it = it->next_;
+    }
+    return it->val_;
+}
+
+void LinkedList::clear() {
+    Node* it = head_;
+    while(it) {
+        Node* temp = it->next_;
+        delete it;
+        it = temp;
+    }
+    head_ = nullptr;
+}
+
+void LinkedList::reverse() {
+    Node* cur =  head_;
+    Node* prev = nullptr;
+    while(cur) {
+        Node* next = cur->next_;
+        cur->next_ = prev;
+        prev = cur;
+        cur = next;
+    }
+    head_ = prev;
+}
+
+void LinkedList::reverseRecursively(Node* node) {
+    if(!node->next_) {
+        head_ = node;
+        return;
+    }
+    reverseRecursively(node->next_);
+    Node* nextNode = node->next_; 
+    nextNode->next_ = node;
+    node->next_ = nullptr;
+}
+
+void LinkedList::print(Node* head) const {
+    if(!head) {
+        return;
+    }
+    std::cout << head->val_ << " ";
+    print(head->next_);
+}
+
+void LinkedList::printReverse(Node* head) const {
+    if(!head) {
+        return;
+    }
+    printReverse(head->next_);
+    std::cout << head->val_ << " ";
+}
+
 int main() {
     LinkedList list;
-    list.pushBack(5);
-    list.popBack();
     list.pushFront(3);
-    list.popFront();
     list.pushFront(1);
+    list.pushBack(5);
     list.pushBack(0);
-        list.pushBack(5);
-            list.pushBack(14);
-            list.popFront();
+    list.pushBack(14);
+    list.reverseRecursively();
+    std::cout << "front: " << list.front() << " back: " << list.back() << std::endl;
     LinkedList::Iterator it = list.begin();
     auto end = list.end();
-    while(it != end) {
-        std::cout << *it << std::endl;
-        ++it;
-    }
-    std::list<int> la;
+    list.print();
+    //list.printReverse();
+    //std::list<int> ah; 
+    //while(it != end) {
+    //    std::cout << *it << std::endl;
+    //    ++it;
+    //}
 }
