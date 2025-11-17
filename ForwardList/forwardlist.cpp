@@ -1,5 +1,10 @@
 #include "forwardlist.hpp"
 #include <iostream>
+#include <stack>
+
+ForwardList::~ForwardList() {
+    clear();
+}
 
 size_t ForwardList::size() const {
     size_t size{0};
@@ -22,6 +27,15 @@ void ForwardList::clear() {
         delete it;
         it = tmp;
     }
+    head_ = nullptr;
+}
+
+ForwardList::Iterator ForwardList::begin() const {
+    return Iterator(head_);
+}
+
+ForwardList::Iterator ForwardList::end() const {
+    return Iterator();
 }
 
 void ForwardList::pushFront(int val) {
@@ -120,9 +134,39 @@ void ForwardList::reverse() {
     head_ = prev;
 }
 
-//void ForwardList::reverseRec(Node* head) {
-//    if(!head) {
-//        return;
-//    }
-//
-//}
+void ForwardList::reverseRec() {
+    reverseRec(head_);
+}
+
+void ForwardList::reverseRec(Node* head) {
+    if(!head) {
+        return;
+    }
+    if(!head->next_) {
+        head_ = head;
+        return;
+    }
+    reverseRec(head->next_);
+    Node* old_next = head->next_;
+    old_next->next_ = head;
+    head->next_ = nullptr;
+}
+
+void ForwardList::reverseStack() {
+    if(empty()) {
+        return;
+    }
+    Node* it = head_;
+    std::stack<Node*> stack;
+    while(it->next_) {
+        stack.push(it);
+        it = it->next_;      
+    }
+    head_ = it;
+    while(!stack.empty()) {
+        it->next_ = stack.top();
+        stack.pop();
+        it = it->next_;
+    }
+    it->next_ = nullptr;
+}

@@ -180,9 +180,14 @@ int main() {
     list.pushBack(1);
     list.pushBack(2);
     list.pushBack(3);
-    //list.reverse();
-    list.printReverseRec();
+    list.reverseStack();
+    list.print();
+    auto it = list.end();
+    for(auto it = list.begin(); it != list.end(); ++it) {
+        std:: cout << *it << std::endl;
+    }
 
+    //std::cout << *it << std::endl;
 
     //list.printReverse();
     //std::list<int> ah; 
