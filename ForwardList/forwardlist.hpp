@@ -21,23 +21,34 @@ public:
             Node* node_;
     };
 
-    ForwardList(const ForwardList& r);
-    ForwardList& operator=(const ForwardList& r);
-    ForwardList(ForwardList&& r);
-    ForwardList&& operator=(ForwardList&& r);
+    ForwardList() = default;
+    ForwardList(const ForwardList& other);
+    ForwardList& operator=(const ForwardList& other);
+    ForwardList(ForwardList&& other);
+    ForwardList& operator=(ForwardList&& other);
     ~ForwardList();
+
     size_t size() const;
     bool empty() const;
-    void clear();
+
     Iterator begin() const;
     Iterator end() const;
+    int& front();
+    int& back();
+
+    void clear();
     void pushFront(int val);
     void pushBack(int val);
     void popBack();
     void popFront();
+    void remove(int val);
+    void erase(Iterator it);
+    void erase(Iterator begin, Iterator end);
+
     void print() const; 
     void printRec() const; 
     void printReverseRec() const;
+
     void reverse();
     void reverseRec();
     void reverseStack();

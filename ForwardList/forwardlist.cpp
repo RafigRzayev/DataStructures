@@ -2,9 +2,63 @@
 #include <iostream>
 #include <stack>
 
+/*************************************** Copy & Move semantics, DTOR  ***************************************/
+
+ForwardList::ForwardList(const ForwardList& other) {
+    if(other.empty()) {
+        head_ = nullptr;
+        return;
+    }
+    // create head
+    Node* it = other.head_;
+    head_ = new Node(it->val_);
+    // create other nodes
+    Node* prev = head_;
+    it = it->next_;
+    while(it) {
+        Node* cur = new Node(it->val_);
+        prev->next_ = cur;
+        prev = cur;
+        it = it->next_;
+    }
+}
+
+ForwardList& ForwardList::operator=(const ForwardList& other) {
+    if(other.empty()) {
+        head_ = nullptr;
+        return *this;
+    }
+    // create head
+    Node* it = other.head_;
+    head_ = new Node(it->val_);
+    // create other nodes
+    Node* prev = head_;
+    it = it->next_;
+    while(it) {
+        Node* cur = new Node(it->val_);
+        prev->next_ = cur;
+        prev = cur;
+        it = it->next_;
+    }
+    return *this;
+}
+
+ForwardList::ForwardList(ForwardList&& other) {
+    head_ = other.head_;
+    other.head_ = nullptr;
+}
+
+ForwardList& ForwardList::operator=(ForwardList&& other) {
+    head_ = other.head_;
+    other.head_ = nullptr;
+    return *this;
+}
+
 ForwardList::~ForwardList() {
     clear();
 }
+
+/*************************************** Utility  ***************************************/
 
 size_t ForwardList::size() const {
     size_t size{0};
@@ -20,6 +74,30 @@ bool ForwardList::empty() const {
     return !head_;
 }
 
+/*************************************** Access  ***************************************/
+
+ForwardList::Iterator ForwardList::begin() const {
+    return Iterator(head_);
+}
+
+ForwardList::Iterator ForwardList::end() const {
+    return Iterator();
+}
+
+int& ForwardList::front() {
+    return head_->val_;
+}
+
+int& ForwardList::back() {
+    Node* it = head_;
+    while(it->next_) {
+        it = it->next_;
+    }
+    return it->val_;
+}
+
+/*************************************** Modifiers  ***************************************/
+
 void ForwardList::clear() {
     Node* it = head_;
     while(it) {
@@ -28,14 +106,6 @@ void ForwardList::clear() {
         it = tmp;
     }
     head_ = nullptr;
-}
-
-ForwardList::Iterator ForwardList::begin() const {
-    return Iterator(head_);
-}
-
-ForwardList::Iterator ForwardList::end() const {
-    return Iterator();
 }
 
 void ForwardList::pushFront(int val) {
@@ -80,6 +150,39 @@ void ForwardList::popBack() {
     }
     delete it->next_;
     it->next_ = nullptr;
+}
+
+void ForwardList::remove(int val) {
+    // Case 1: 0 elements
+    if(empty()) {
+        return;
+    }
+    // Case 2: 1 element
+    if(!head_->next_) {
+        if(val == head_->val_) {
+            delete head_;
+            head_ = nullptr;
+        }
+        return;
+    }
+    // Case 3: 
+    //Node* cur = head_;
+    //Node* prev = nullptr;
+    //while(cur) {
+    //    // if element found, remove the node
+    //    if(val == cur->val_) {
+    //        
+    //    }
+    //    it = it->next_;
+    //}
+}
+
+void ForwardList::erase(Iterator it) {
+
+}
+
+void ForwardList::erase(Iterator begin, Iterator end) {
+
 }
 
 /*************************************** Print Functions ***************************************/
