@@ -113,6 +113,15 @@ void ForwardList::pushFront(int val) {
     head_ = tmp;
 }
 
+void ForwardList::popFront() {
+    if(empty()) {
+        return;
+    }
+    Node* tmp = head_->next_;
+    delete head_;
+    head_ = tmp;
+}
+
 void ForwardList::pushBack(int val) {
     if(empty()) {
         head_ = new Node{val};
@@ -124,15 +133,6 @@ void ForwardList::pushBack(int val) {
         it = it->next_;
     }
     it->next_ = new Node(val);
-}
-
-void ForwardList::popFront() {
-    if(empty()) {
-        return;
-    }
-    Node* tmp = head_->next_;
-    delete head_;
-    head_ = tmp;
 }
 
 void ForwardList::popBack() {
@@ -153,36 +153,40 @@ void ForwardList::popBack() {
 }
 
 void ForwardList::remove(int val) {
-    // Case 1: 0 elements
-    if(empty()) {
-        return;
-    }
-    // Case 2: 1 element
-    if(!head_->next_) {
-        if(val == head_->val_) {
-            delete head_;
-            head_ = nullptr;
+    Node* cur = head_;
+    Node* prev = nullptr;
+    Node* next = nullptr;
+    while(cur) {
+        next = cur->next_;
+        // delete node if found
+        if(val == cur->val_) {
+            delete cur;
+            // connect previous node to the next node after deletion
+            if(prev) {
+                prev->next_ = next;
+            } 
+            // if previous doesn't exist, update head
+            else {
+                head_ = next; 
+            }
+        } 
+        // Update previous node only if delete didn't happen
+        else {
+            prev = cur;
         }
+        cur = next;
+    }
+}
+
+void ForwardList::eraseAfter(Iterator it) {
+    Node* prev = it.node_;
+    if(!prev || !prev->next_) {
         return;
     }
-    // Case 3: 
-    //Node* cur = head_;
-    //Node* prev = nullptr;
-    //while(cur) {
-    //    // if element found, remove the node
-    //    if(val == cur->val_) {
-    //        
-    //    }
-    //    it = it->next_;
-    //}
-}
-
-void ForwardList::erase(Iterator it) {
-
-}
-
-void ForwardList::erase(Iterator begin, Iterator end) {
-
+    Node* cur = prev->next_;
+    Node* next = cur->next_;
+    delete cur;
+    prev->next_ = next;
 }
 
 /*************************************** Print Functions ***************************************/

@@ -19,6 +19,7 @@ public:
             bool operator!=(const Iterator& r) const { return node_ != r.node_; }
         private:
             Node* node_;
+            friend class ForwardList;
     };
 
     ForwardList() = default;
@@ -38,12 +39,11 @@ public:
 
     void clear();
     void pushFront(int val);
+    void popFront();
     void pushBack(int val);
     void popBack();
-    void popFront();
     void remove(int val);
-    void erase(Iterator it);
-    void erase(Iterator begin, Iterator end);
+    void eraseAfter(Iterator it);
 
     void print() const; 
     void printRec() const; 

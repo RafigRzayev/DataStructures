@@ -1,6 +1,6 @@
 #include <iostream>
 #include "forwardlist.hpp"
-#include <list>
+#include <forward_list>
 
 
 int main() {
@@ -12,19 +12,17 @@ int main() {
 
     //list.pushBack(5);
     list.pushBack(1);
-    list.pushBack(2);
-    list.pushBack(3);
-    list.reverseStack();
+   list.pushBack(2);
+
+
+    list.remove(2);
+        list.remove(1);
+        list.pushFront(2);
     list.print();
-    auto it = list.end();
-    for(auto it = list.begin(); it != list.end(); ++it) {
-        std:: cout << *it << std::endl;
-    }
 
-    std::list<int> list2;list2.
-
+    std::forward_list<int>flist;
     //list.printReverse();
-    //std::list<int> ah; 
+    
     //while(it != end) {
     //    std::cout << *it << std::endl;
     //    ++it;
