@@ -22,6 +22,7 @@ public:
             friend class ForwardList;
     };
 
+    /* CTOR, DTOR, Copy & Move semantics */
     ForwardList() = default;
     ForwardList(const ForwardList& other);
     ForwardList& operator=(const ForwardList& other);
@@ -29,32 +30,46 @@ public:
     ForwardList& operator=(ForwardList&& other);
     ~ForwardList();
 
+    /* Utility */
     size_t size() const;
     bool empty() const;
 
+    /* Access */
     Iterator begin() const;
     Iterator end() const;
     int& front();
     int& back();
 
+    /* Modifiers */
     void clear();
     void pushFront(int val);
     void popFront();
     void pushBack(int val);
     void popBack();
     void remove(int val);
-    void eraseAfter(Iterator it);
+    //void eraseAfter(Iterator it);
 
+    /* Print Functions */
     void print() const; 
     void printRec() const; 
     void printReverseRec() const;
+private:
+    void printRec(Node* head) const;
+    void printReverseRec(Node* head) const;
 
+    /* Reversal */
+public:
     void reverse();
     void reverseRec();
     void reverseStack();
 private:
-    void printRec(Node* head) const;
-    void printReverseRec(Node* head) const;
     void reverseRec(Node* head);
+
+public:
+    /* Sort & Merge*/
+    void sort();
+    
+
+
     Node* head_ = nullptr;
 };

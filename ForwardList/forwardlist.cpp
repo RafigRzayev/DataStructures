@@ -6,7 +6,6 @@
 
 ForwardList::ForwardList(const ForwardList& other) {
     if(other.empty()) {
-        head_ = nullptr;
         return;
     }
     // create head
@@ -25,7 +24,6 @@ ForwardList::ForwardList(const ForwardList& other) {
 
 ForwardList& ForwardList::operator=(const ForwardList& other) {
     if(other.empty()) {
-        head_ = nullptr;
         return *this;
     }
     // create head
@@ -178,16 +176,17 @@ void ForwardList::remove(int val) {
     }
 }
 
-void ForwardList::eraseAfter(Iterator it) {
-    Node* prev = it.node_;
-    if(!prev || !prev->next_) {
-        return;
-    }
-    Node* cur = prev->next_;
-    Node* next = cur->next_;
-    delete cur;
-    prev->next_ = next;
-}
+// need to implement before_begin feature to allow erasing the head
+//void ForwardList::eraseAfter(Iterator it) {
+//    Node* prev = it.node_;
+//    if(!prev || !prev->next_) {
+//        return;
+//    }
+//    Node* cur = prev->next_;
+//    Node* next = cur->next_;
+//    delete cur;
+//    prev->next_ = next;
+//}
 
 /*************************************** Print Functions ***************************************/
 
