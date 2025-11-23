@@ -3,6 +3,7 @@
 
 class ForwardList {
 private:
+    // internal node implementation
     struct Node {
         int val_;
         Node* next_;
@@ -10,6 +11,7 @@ private:
         Node(int val, Node* next = nullptr) : val_{val}, next_{next} {}
     };
 public:
+    // API for iteration
     class Iterator {
         public:
             Iterator(Node* node = nullptr) : node_{node} {}
@@ -22,7 +24,7 @@ public:
             friend class ForwardList;
     };
 
-    /* CTOR, DTOR, Copy & Move semantics */
+    /* CTOR, DTOR, Copy & Move operations */
     ForwardList() = default;
     ForwardList(const ForwardList& other);
     ForwardList& operator=(const ForwardList& other);
@@ -47,29 +49,26 @@ public:
     void pushBack(int val);
     void popBack();
     void remove(int val);
-    //void eraseAfter(Iterator it);
 
     /* Print Functions */
     void print() const; 
     void printRec() const; 
     void printReverseRec() const;
-private:
-    void printRec(Node* head) const;
-    void printReverseRec(Node* head) const;
 
     /* Reversal */
-public:
     void reverse();
     void reverseRec();
     void reverseStack();
+
+    /* Merge Sort */
+    void sort() { sort(head_); }
+
 private:
+    void printRec(Node* head) const;
+    void printReverseRec(Node* head) const;
     void reverseRec(Node* head);
-
-public:
-    /* Sort & Merge*/
-    void sort();
-    
-
+    void sort(Node*& head);
+    Node* merge(Node* left, Node* right);
 
     Node* head_ = nullptr;
 };

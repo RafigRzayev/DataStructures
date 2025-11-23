@@ -4,27 +4,21 @@
 
 
 int main() {
-    ForwardList list;
-    //list.pushBack(5);
-    //list.pushFront(4);
-    //list.pushFront(1);
-    //list.pushBack(6);
-
-    //list.pushBack(5);
-    list.pushBack(1);
-   list.pushBack(2);
 
 
-    list.remove(2);
-        list.remove(1);
-        list.pushFront(2);
-    list.print();
+   
+    ForwardList flist;
+    flist.pushBack(5);
+    flist.pushBack(-3);
+    flist.pushBack(1);
+    flist.pushFront(100);
+    flist.pushFront(-5);
+    //flist.pushBack(-5);
+    //flist.pushBack(6);
+    //flist.pushBack(10);
+    //flist.print();
+    flist.sort();
+    flist.printRec();
 
-    std::forward_list<int>flist;
-    //list.printReverse();
-    
-    //while(it != end) {
-    //    std::cout << *it << std::endl;
-    //    ++it;
-    //}
+    return 0;
 }

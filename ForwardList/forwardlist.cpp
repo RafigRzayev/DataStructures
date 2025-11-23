@@ -176,18 +176,6 @@ void ForwardList::remove(int val) {
     }
 }
 
-// need to implement before_begin feature to allow erasing the head
-//void ForwardList::eraseAfter(Iterator it) {
-//    Node* prev = it.node_;
-//    if(!prev || !prev->next_) {
-//        return;
-//    }
-//    Node* cur = prev->next_;
-//    Node* next = cur->next_;
-//    delete cur;
-//    prev->next_ = next;
-//}
-
 /*************************************** Print Functions ***************************************/
 
 void ForwardList::print() const {
@@ -276,3 +264,46 @@ void ForwardList::reverseStack() {
     }
     it->next_ = nullptr;
 }
+
+/*************************************** Sort & Merge ***************************************/   
+
+void ForwardList::sort(Node*& head) {
+    if(!head || !head->next_) {
+        return;
+    }
+    // heads of the sub-lists
+    Node* left = head;
+    Node* right = head;
+    // reach the mid point in the main list 
+    while(right && right->next_ && right->next_->next_) {
+        right = right->next_->next_;
+        left = left->next_;
+    }
+    right = left->next_; // head of the right list
+    left->next_ = nullptr; // terminator of the left list
+    left = head;
+    sort(left);
+    sort(right);
+    head = merge(left, right);
+}
+
+ForwardList::Node* ForwardList::merge(Node* left, Node* right) {
+    Node head{0, nullptr};
+    Node* it = &head;
+    while(left || right) {
+        if(!right) {
+            it->next_ = left;
+            break;
+        }
+        if(!left) {
+            it->next_ = right;
+            break;
+        }
+        Node*& smallest = left->val_ < right->val_ ? left : right;
+        it->next_ = smallest;
+        it = it->next_;
+        smallest = smallest->next_;
+    } 
+    return head.next_;
+}
+
