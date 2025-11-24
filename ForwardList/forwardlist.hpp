@@ -63,7 +63,7 @@ public:
     void reverseStack();
 
     /* Merge Sort */
-    void sort() { sort(head_); }
+    void sort() { sort(head_->next_); }
 
 private:
     void printRec(Node* head) const;
@@ -71,6 +71,8 @@ private:
     void reverseRec(Node* head);
     void sort(Node*& head);
     Node* merge(Node* left, Node* right);
+    void copy(const ForwardList& other);
+    void steal(ForwardList&& other);
 
     Node* head_ = new Node{};
 };

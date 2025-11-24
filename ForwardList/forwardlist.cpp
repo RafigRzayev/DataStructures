@@ -4,57 +4,50 @@
 
 /*************************************** Copy & Move semantics, DTOR  ***************************************/
 
-ForwardList::ForwardList(const ForwardList& other) {
-    if(other.empty()) {
-        return;
-    }
-    // create head
-    Node* it = other.head_;
-    head_ = new Node(it->val_);
-    // create other nodes
-    Node* prev = head_;
-    it = it->next_;
-    while(it) {
-        Node* cur = new Node(it->val_);
-        prev->next_ = cur;
-        prev = cur;
-        it = it->next_;
-    }
+ForwardList::ForwardList(const ForwardList& other) : head_{new Node()} {
+    copy(other);
 }
 
 ForwardList& ForwardList::operator=(const ForwardList& other) {
-    if(other.empty()) {
+    if(this == &other) {
         return *this;
     }
-    // create head
-    Node* it = other.head_;
-    head_ = new Node(it->val_);
-    // create other nodes
-    Node* prev = head_;
-    it = it->next_;
-    while(it) {
-        Node* cur = new Node(it->val_);
-        prev->next_ = cur;
-        prev = cur;
-        it = it->next_;
-    }
+    clear();
+    copy(other);
     return *this;
 }
 
-ForwardList::ForwardList(ForwardList&& other) {
-    head_ = other.head_;
-    other.head_ = nullptr;
+ForwardList::ForwardList(ForwardList&& other) : head_{new Node()} {
+    steal(std::move(other));
 }
 
 ForwardList& ForwardList::operator=(ForwardList&& other) {
-    head_ = other.head_;
-    other.head_ = nullptr;
+    if(this == &other) {
+        return *this;
+    }
+    clear();
+    steal(std::move(other));
     return *this;
 }
 
 ForwardList::~ForwardList() {
     clear();
     delete head_;
+}
+
+void ForwardList::copy(const ForwardList& other) {
+    Node* it = other.head_->next_;
+    Node* prev = head_;
+    while(it) {
+        prev->next_ = new Node(it->val_);
+        prev = prev->next_;
+        it = it->next_;
+    }
+}
+
+void ForwardList::steal(ForwardList&& other) {
+    head_->next_ = other.head_->next_;
+    other.head_->next_ = nullptr;
 }
 
 /*************************************** Utility  ***************************************/
