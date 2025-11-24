@@ -74,6 +74,10 @@ bool ForwardList::empty() const {
 
 /*************************************** Access  ***************************************/
 
+//const ForwardList::Iterator ForwardList::beforeBegin() const {
+//    return ;
+//}
+
 ForwardList::Iterator ForwardList::begin() const {
     return Iterator(head_);
 }
@@ -175,6 +179,23 @@ void ForwardList::remove(int val) {
         cur = next;
     }
 }
+
+//void ForwardList::eraseAfter(Iterator it) {
+//    sentinel->next_ = head_;
+//    head_ = sentinel;
+//    Node* pos = it.node_;
+//    if(!pos || !pos->next_) {
+//        head_ = head_->next_;
+//        sentinel->next_ = nullptr;
+//        return;
+//    }
+//    Node* cur = pos->next_;
+//    Node* next = cur->next_;
+//    delete cur;
+//    pos->next_ = next;
+//    head_ = head_->next_;
+//    sentinel->next_ = nullptr;
+//}
 
 /*************************************** Print Functions ***************************************/
 

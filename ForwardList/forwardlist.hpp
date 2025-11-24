@@ -37,6 +37,7 @@ public:
     bool empty() const;
 
     /* Access */
+    //const Iterator beforeBegin() const;
     Iterator begin() const;
     Iterator end() const;
     int& front();
@@ -49,6 +50,7 @@ public:
     void pushBack(int val);
     void popBack();
     void remove(int val);
+    //void eraseAfter(Iterator it);
 
     /* Print Functions */
     void print() const; 
