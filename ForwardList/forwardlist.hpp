@@ -37,7 +37,7 @@ public:
     bool empty() const;
 
     /* Access */
-    //const Iterator beforeBegin() const;
+    Iterator beforeBegin() const;
     Iterator begin() const;
     Iterator end() const;
     int& front();
@@ -72,5 +72,5 @@ private:
     void sort(Node*& head);
     Node* merge(Node* left, Node* right);
 
-    Node* head_ = nullptr;
+    Node* head_ = new Node{};
 };

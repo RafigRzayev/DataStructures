@@ -54,13 +54,14 @@ ForwardList& ForwardList::operator=(ForwardList&& other) {
 
 ForwardList::~ForwardList() {
     clear();
+    delete head_;
 }
 
 /*************************************** Utility  ***************************************/
 
 size_t ForwardList::size() const {
     size_t size{0};
-    Node* it = head_;
+    Node* it = head_->next_;
     while(it) {
         ++size;
         it = it->next_;
@@ -69,17 +70,17 @@ size_t ForwardList::size() const {
 }
 
 bool ForwardList::empty() const {
-    return !head_;
+    return !head_->next_;
 }
 
 /*************************************** Access  ***************************************/
 
-//const ForwardList::Iterator ForwardList::beforeBegin() const {
-//    return ;
-//}
+ForwardList::Iterator ForwardList::beforeBegin() const {
+    return Iterator(head_);
+}
 
 ForwardList::Iterator ForwardList::begin() const {
-    return Iterator(head_);
+    return Iterator(head_->next_);
 }
 
 ForwardList::Iterator ForwardList::end() const {
@@ -87,11 +88,11 @@ ForwardList::Iterator ForwardList::end() const {
 }
 
 int& ForwardList::front() {
-    return head_->val_;
+    return head_->next_->val_;
 }
 
 int& ForwardList::back() {
-    Node* it = head_;
+    Node* it = head_->next_;
     while(it->next_) {
         it = it->next_;
     }
@@ -101,36 +102,36 @@ int& ForwardList::back() {
 /*************************************** Modifiers  ***************************************/
 
 void ForwardList::clear() {
-    Node* it = head_;
+    Node* it = head_->next_;
     while(it) {
         Node* tmp = it->next_;
         delete it;
         it = tmp;
     }
-    head_ = nullptr;
+    head_->next_ = nullptr;
 }
 
 void ForwardList::pushFront(int val) {
-    Node* tmp = new Node{val, head_};
-    head_ = tmp;
+    Node* tmp = new Node{val, head_->next_};
+    head_->next_ = tmp;
 }
 
 void ForwardList::popFront() {
     if(empty()) {
         return;
     }
-    Node* tmp = head_->next_;
-    delete head_;
-    head_ = tmp;
+    Node* tmp = head_->next_->next_;
+    delete head_->next_;
+    head_->next_ = tmp;
 }
 
 void ForwardList::pushBack(int val) {
     if(empty()) {
-        head_ = new Node{val};
+        head_->next_ = new Node{val};
         return;
     }
     // get the last element
-    Node* it = head_; 
+    Node* it = head_->next_; 
     while(it->next_) {
         it = it->next_;
     }
@@ -141,12 +142,12 @@ void ForwardList::popBack() {
     if(empty()) {
         return;
     }
-    if(!head_->next_) {
-        delete head_;
-        head_ = nullptr;
+    if(!head_->next_->next_) {
+        delete head_->next_;
+        head_->next_ = nullptr;
         return;
     }
-    Node* it = head_;
+    Node* it = head_->next_;
     while(it->next_->next_) {
         it = it->next_;
     }
@@ -155,25 +156,15 @@ void ForwardList::popBack() {
 }
 
 void ForwardList::remove(int val) {
-    Node* cur = head_;
-    Node* prev = nullptr;
+    Node* prev = head_;
+    Node* cur = head_->next_;
     Node* next = nullptr;
     while(cur) {
         next = cur->next_;
-        // delete node if found
-        if(val == cur->val_) {
+        if(cur->val_ == val) {
             delete cur;
-            // connect previous node to the next node after deletion
-            if(prev) {
-                prev->next_ = next;
-            } 
-            // if previous doesn't exist, update head
-            else {
-                head_ = next; 
-            }
-        } 
-        // Update previous node only if delete didn't happen
-        else {
+            prev->next_ = next;
+        } else {
             prev = cur;
         }
         cur = next;
@@ -200,7 +191,7 @@ void ForwardList::remove(int val) {
 /*************************************** Print Functions ***************************************/
 
 void ForwardList::print() const {
-    Node* it = head_;
+    Node* it = head_->next_;
     while(it) {
         std::cout << it->val_ << " ";
         it = it->next_;
@@ -209,7 +200,7 @@ void ForwardList::print() const {
 }
 
 void ForwardList::printRec() const {
-    printRec(head_);
+    printRec(head_->next_);
     std::cout << std::endl;
 }
 
@@ -222,7 +213,7 @@ void ForwardList::printRec(Node* head) const {
 }
 
 void ForwardList::printReverseRec() const {
-    printReverseRec(head_);
+    printReverseRec(head_->next_);
     std::cout << std::endl;
 }
 
@@ -237,20 +228,20 @@ void ForwardList::printReverseRec(Node* head) const {
 /*************************************** Reversal ***************************************/
 
 void ForwardList::reverse() {
-    Node* cur{head_};
-    Node* prev{nullptr};
+    Node* cur{head_->next_};
     Node* next{nullptr};
+    Node* prev{nullptr};
     while(cur) {
         next = cur->next_;
-        cur->next_ = prev;  
+        cur->next_ = prev;
         prev = cur;
         cur = next;
     }
-    head_ = prev;
+    head_->next_ = prev;
 }
 
 void ForwardList::reverseRec() {
-    reverseRec(head_);
+    reverseRec(head_->next_);
 }
 
 void ForwardList::reverseRec(Node* head) {
@@ -258,12 +249,12 @@ void ForwardList::reverseRec(Node* head) {
         return;
     }
     if(!head->next_) {
-        head_ = head;
+        head_->next_ = head;
         return;
     }
     reverseRec(head->next_);
-    Node* old_next = head->next_;
-    old_next->next_ = head;
+    Node* prev = head->next_;
+    prev->next_ = head;
     head->next_ = nullptr;
 }
 
@@ -271,13 +262,13 @@ void ForwardList::reverseStack() {
     if(empty()) {
         return;
     }
-    Node* it = head_;
+    Node* it = head_->next_;
     std::stack<Node*> stack;
     while(it->next_) {
         stack.push(it);
         it = it->next_;      
     }
-    head_ = it;
+    head_->next_ = it;
     while(!stack.empty()) {
         it->next_ = stack.top();
         stack.pop();
