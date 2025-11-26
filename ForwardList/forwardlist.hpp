@@ -50,7 +50,8 @@ public:
     void pushBack(int val);
     void popBack();
     void remove(int val);
-    //void eraseAfter(Iterator it);
+    void eraseAfter(Iterator it);
+    void eraseAfter(Iterator first, Iterator last);
 
     /* Print Functions */
     void print() const; 
@@ -73,6 +74,7 @@ private:
     Node* merge(Node* left, Node* right);
     void copy(const ForwardList& other);
     void steal(ForwardList&& other);
-
+    void _eraseAfter(Iterator first, Iterator last);
+    bool _hasAfter(Iterator it) const;
     Node* head_ = new Node{};
 };

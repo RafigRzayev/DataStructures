@@ -4,15 +4,15 @@
 
 int main() {
     ForwardList flist;
-    flist.pushBack(1);
+    flist.pushBack(51);
     flist.pushBack(6);
-    flist.pushBack(54);
-    flist.pushBack(100);
-    flist.pushBack(-5);
-    flist.pushFront(-1);
-    flist.sort();
-    auto flist2(flist);
-    flist2.printRec();
 
+    flist.sort();
+
+    ForwardList flist2{flist};
+    flist2.eraseAfter(flist2.beforeBegin());
+    flist = flist2;
+    flist.print();
+    flist2.print();
     return 0;
 }

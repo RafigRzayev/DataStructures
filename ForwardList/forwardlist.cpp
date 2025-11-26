@@ -4,7 +4,7 @@
 
 /*************************************** Copy & Move semantics, DTOR  ***************************************/
 
-ForwardList::ForwardList(const ForwardList& other) : head_{new Node()} {
+ForwardList::ForwardList(const ForwardList& other) : ForwardList() {
     copy(other);
 }
 
@@ -17,7 +17,7 @@ ForwardList& ForwardList::operator=(const ForwardList& other) {
     return *this;
 }
 
-ForwardList::ForwardList(ForwardList&& other) : head_{new Node()} {
+ForwardList::ForwardList(ForwardList&& other) : ForwardList() {
     steal(std::move(other));
 }
 
@@ -164,22 +164,36 @@ void ForwardList::remove(int val) {
     }
 }
 
-//void ForwardList::eraseAfter(Iterator it) {
-//    sentinel->next_ = head_;
-//    head_ = sentinel;
-//    Node* pos = it.node_;
-//    if(!pos || !pos->next_) {
-//        head_ = head_->next_;
-//        sentinel->next_ = nullptr;
-//        return;
-//    }
-//    Node* cur = pos->next_;
-//    Node* next = cur->next_;
-//    delete cur;
-//    pos->next_ = next;
-//    head_ = head_->next_;
-//    sentinel->next_ = nullptr;
-//}
+void ForwardList::eraseAfter(Iterator it) {
+    if(_hasAfter(it)) {
+        _eraseAfter(it, Iterator(it.node_->next_->next_));
+    }
+}
+
+void ForwardList::eraseAfter(Iterator first, Iterator last) {
+    if(_hasAfter(first)) {
+        _eraseAfter(first, last);
+    }
+}
+
+void ForwardList::_eraseAfter(Iterator first, Iterator last) {
+    if(first == last || first.node_->next_ == last.node_) {
+        return;
+    }
+    Node* end = last.node_;
+    Node* prev = first.node_;
+    Node* cur = prev->next_;
+    while(cur != end) {
+        Node* next = cur->next_;
+        delete cur;
+        cur = next;
+    }
+    prev->next_ = cur;
+}
+
+bool ForwardList::_hasAfter(Iterator it) const {
+    return it.node_ && it.node_->next_;
+}
 
 /*************************************** Print Functions ***************************************/
 
@@ -270,7 +284,7 @@ void ForwardList::reverseStack() {
     it->next_ = nullptr;
 }
 
-/*************************************** Sort & Merge ***************************************/   
+/*************************************** Merge Sort ***************************************/   
 
 void ForwardList::sort(Node*& head) {
     if(!head || !head->next_) {
