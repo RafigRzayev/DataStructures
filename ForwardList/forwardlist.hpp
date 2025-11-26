@@ -1,6 +1,25 @@
 #pragma once
 #include <cstddef>
 
+/* Forward List:
+ * - Similar API to STL std::forward_list
+ * - Implemented via sentinel node at the head. It simplifies eraseAfter() and insertAfter() via beforeBegin() iterator
+ * - The exposed first node is always head->next. 
+ * - Sentinel is tied to the object and not stolen during move operations
+ * 
+ * TODO:
+ * 1) Switch to template and caution for pass by value
+ * 2) Exceptions for front/back
+ * 3) CTOR/insertAfter: use initializer list and count approaches 
+ * 4) Tests? 
+ * 5) Refactor/verify
+ * 6) Consider sentinel creation without utilizing new operator
+ * 7) Investigate universal reference for copy_()
+ * 8) Expose merge?
+ * 9) Reverse without head_ node? 
+ * 10) Sort predicate
+ */
+
 class ForwardList {
 private:
     // internal node implementation
@@ -24,7 +43,7 @@ public:
             friend class ForwardList;
     };
 
-    /* CTOR, DTOR, Copy & Move operations */
+    /* CTOR, DTOR, Copy, Move */
     ForwardList() = default;
     ForwardList(const ForwardList& other);
     ForwardList& operator=(const ForwardList& other);
@@ -52,6 +71,7 @@ public:
     void remove(int val);
     void eraseAfter(Iterator it);
     void eraseAfter(Iterator first, Iterator last);
+    void insertAfter(Iterator it, int val);
 
     /* Print Functions */
     void print() const; 
@@ -64,17 +84,17 @@ public:
     void reverseStack();
 
     /* Merge Sort */
-    void sort() { sort(head_->next_); }
+    void sort();
 
 private:
-    void printRec(Node* head) const;
-    void printReverseRec(Node* head) const;
-    void reverseRec(Node* head);
-    void sort(Node*& head);
-    Node* merge(Node* left, Node* right);
-    void copy(const ForwardList& other);
-    void steal(ForwardList&& other);
-    void _eraseAfter(Iterator first, Iterator last);
-    bool _hasAfter(Iterator it) const;
+    void printRec_(Node* head) const;
+    void printReverseRec_(Node* head) const;
+    void reverseRec_(Node* head);
+    void sort_(Node*& head);
+    Node* merge_(Node* left, Node* right);
+    void copy_(const ForwardList& other);
+    void steal_(ForwardList&& other);
+    void eraseAfter_(Iterator first, Iterator last);
+    bool hasAfter_(Iterator it) const;
     Node* head_ = new Node{};
 };

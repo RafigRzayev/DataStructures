@@ -6,13 +6,16 @@ int main() {
     ForwardList flist;
     flist.pushBack(51);
     flist.pushBack(6);
-
     flist.sort();
-
-    ForwardList flist2{flist};
-    flist2.eraseAfter(flist2.beforeBegin());
-    flist = flist2;
-    flist.print();
-    flist2.print();
+    //flist.popBack();
+    //flist.popFront();
+    flist.sort();
+    flist.pushFront(3);
+    flist.pushBack(5);
+    auto it = flist.beforeBegin();
+    flist.insertAfter(it, 5);
+    flist.remove(5);
+    flist.printRec();
+    flist.printReverseRec();
     return 0;
 }

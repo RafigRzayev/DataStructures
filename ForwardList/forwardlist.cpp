@@ -2,10 +2,10 @@
 #include <iostream>
 #include <stack>
 
-/*************************************** Copy & Move semantics, DTOR  ***************************************/
+/*************************************** CTOR, DTOR, Copy, Move   ***************************************/
 
 ForwardList::ForwardList(const ForwardList& other) : ForwardList() {
-    copy(other);
+    copy_(other);
 }
 
 ForwardList& ForwardList::operator=(const ForwardList& other) {
@@ -13,12 +13,12 @@ ForwardList& ForwardList::operator=(const ForwardList& other) {
         return *this;
     }
     clear();
-    copy(other);
+    copy_(other);
     return *this;
 }
 
 ForwardList::ForwardList(ForwardList&& other) : ForwardList() {
-    steal(std::move(other));
+    steal_(std::move(other));
 }
 
 ForwardList& ForwardList::operator=(ForwardList&& other) {
@@ -26,7 +26,7 @@ ForwardList& ForwardList::operator=(ForwardList&& other) {
         return *this;
     }
     clear();
-    steal(std::move(other));
+    steal_(std::move(other));
     return *this;
 }
 
@@ -35,7 +35,7 @@ ForwardList::~ForwardList() {
     delete head_;
 }
 
-void ForwardList::copy(const ForwardList& other) {
+void ForwardList::copy_(const ForwardList& other) {
     Node* it = other.head_->next_;
     Node* prev = head_;
     while(it) {
@@ -45,7 +45,7 @@ void ForwardList::copy(const ForwardList& other) {
     }
 }
 
-void ForwardList::steal(ForwardList&& other) {
+void ForwardList::steal_(ForwardList&& other) {
     head_->next_ = other.head_->next_;
     other.head_->next_ = nullptr;
 }
@@ -165,18 +165,18 @@ void ForwardList::remove(int val) {
 }
 
 void ForwardList::eraseAfter(Iterator it) {
-    if(_hasAfter(it)) {
-        _eraseAfter(it, Iterator(it.node_->next_->next_));
+    if(hasAfter_(it)) {
+        eraseAfter_(it, Iterator(it.node_->next_->next_));
     }
 }
 
 void ForwardList::eraseAfter(Iterator first, Iterator last) {
-    if(_hasAfter(first)) {
-        _eraseAfter(first, last);
+    if(hasAfter_(first)) {
+        eraseAfter_(first, last);
     }
 }
 
-void ForwardList::_eraseAfter(Iterator first, Iterator last) {
+void ForwardList::eraseAfter_(Iterator first, Iterator last) {
     if(first == last || first.node_->next_ == last.node_) {
         return;
     }
@@ -191,9 +191,19 @@ void ForwardList::_eraseAfter(Iterator first, Iterator last) {
     prev->next_ = cur;
 }
 
-bool ForwardList::_hasAfter(Iterator it) const {
+bool ForwardList::hasAfter_(Iterator it) const {
     return it.node_ && it.node_->next_;
 }
+
+void ForwardList::insertAfter(Iterator it, int val) {
+    Node* prev = it.node_;
+    if(!prev) {
+        return;
+    }
+    Node* next = prev->next_;
+    prev->next_ = new Node{val, next};
+}
+
 
 /*************************************** Print Functions ***************************************/
 
@@ -207,28 +217,28 @@ void ForwardList::print() const {
 }
 
 void ForwardList::printRec() const {
-    printRec(head_->next_);
+    printRec_(head_->next_);
     std::cout << std::endl;
 }
 
-void ForwardList::printRec(Node* head) const {
+void ForwardList::printRec_(Node* head) const {
     if(!head) {
         return;
     }
     std::cout << head->val_ << " ";
-    printRec(head->next_);
+    printRec_(head->next_);
 }
 
 void ForwardList::printReverseRec() const {
-    printReverseRec(head_->next_);
+    printReverseRec_(head_->next_);
     std::cout << std::endl;
 }
 
-void ForwardList::printReverseRec(Node* head) const {
+void ForwardList::printReverseRec_(Node* head) const {
     if(!head) {
         return;
     }
-    printReverseRec(head->next_);
+    printReverseRec_(head->next_);
     std::cout << head->val_ << " ";
 }
 
@@ -248,10 +258,10 @@ void ForwardList::reverse() {
 }
 
 void ForwardList::reverseRec() {
-    reverseRec(head_->next_);
+    reverseRec_(head_->next_);
 }
 
-void ForwardList::reverseRec(Node* head) {
+void ForwardList::reverseRec_(Node* head) {
     if(!head) {
         return;
     }
@@ -259,7 +269,7 @@ void ForwardList::reverseRec(Node* head) {
         head_->next_ = head;
         return;
     }
-    reverseRec(head->next_);
+    reverseRec_(head->next_);
     Node* prev = head->next_;
     prev->next_ = head;
     head->next_ = nullptr;
@@ -286,7 +296,11 @@ void ForwardList::reverseStack() {
 
 /*************************************** Merge Sort ***************************************/   
 
-void ForwardList::sort(Node*& head) {
+void ForwardList::sort() { 
+    sort_(head_->next_); 
+}
+
+void ForwardList::sort_(Node*& head) {
     if(!head || !head->next_) {
         return;
     }
@@ -301,12 +315,12 @@ void ForwardList::sort(Node*& head) {
     right = left->next_; // head of the right list
     left->next_ = nullptr; // terminator of the left list
     left = head;
-    sort(left);
-    sort(right);
-    head = merge(left, right);
+    sort_(left);
+    sort_(right);
+    head = merge_(left, right);
 }
 
-ForwardList::Node* ForwardList::merge(Node* left, Node* right) {
+ForwardList::Node* ForwardList::merge_(Node* left, Node* right) {
     Node head{0, nullptr};
     Node* it = &head;
     while(left || right) {
