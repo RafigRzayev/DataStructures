@@ -1,8 +1,18 @@
 #include "forwardlist.hpp"
 #include <iostream>
 #include <stack>
+#include <initializer_list>
+#include <cstddef>
 
 /*************************************** CTOR, DTOR, Copy, Move   ***************************************/
+
+ForwardList::ForwardList(std::initializer_list<int> l) : ForwardList() {
+    Node* it = head_;
+    for(int i : l) {
+        it->next_ = new Node(i);
+        it = it->next_;
+    }
+}
 
 ForwardList::ForwardList(const ForwardList& other) : ForwardList() {
     copy_(other);
@@ -202,6 +212,19 @@ void ForwardList::insertAfter(Iterator it, int val) {
     }
     Node* next = prev->next_;
     prev->next_ = new Node{val, next};
+}
+
+void ForwardList::insertAfter(Iterator it, std::initializer_list<int> l) {
+    Node* prev = it.node_;
+    if(!prev) {
+        return;
+    }
+    Node* next = prev->next_;
+    for(int i : l) {
+        prev->next_ = new Node(i);
+        prev = prev->next_;
+    }
+    prev->next_ = next;
 }
 
 

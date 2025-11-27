@@ -1,5 +1,6 @@
 #pragma once
 #include <cstddef>
+#include <initializer_list>
 
 /* Forward List:
  * - Similar API to STL std::forward_list
@@ -9,8 +10,8 @@
  * 
  * TODO:
  * 1) Switch to template and caution for pass by value
- * 2) Exceptions for front/back
- * 3) CTOR/insertAfter: use initializer list and count approaches 
+ * 2) Exceptions for front/back?
+ * 
  * 4) Tests? 
  * 5) Refactor/verify
  * 6) Consider sentinel creation without utilizing new operator
@@ -45,6 +46,7 @@ public:
 
     /* CTOR, DTOR, Copy, Move */
     ForwardList() = default;
+    ForwardList(std::initializer_list<int> l);
     ForwardList(const ForwardList& other);
     ForwardList& operator=(const ForwardList& other);
     ForwardList(ForwardList&& other);
@@ -72,6 +74,7 @@ public:
     void eraseAfter(Iterator it);
     void eraseAfter(Iterator first, Iterator last);
     void insertAfter(Iterator it, int val);
+    void insertAfter(Iterator it, std::initializer_list<int> l);
 
     /* Print Functions */
     void print() const; 
