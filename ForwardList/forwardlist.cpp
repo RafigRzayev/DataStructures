@@ -6,6 +6,10 @@
 
 /*************************************** CTOR, DTOR, Copy, Move   ***************************************/
 
+ForwardList::ForwardList() {
+     head_ = &sentinel_;
+}
+
 ForwardList::ForwardList(std::initializer_list<int> l) : ForwardList() {
     Node* it = head_;
     for(int i : l) {
@@ -42,7 +46,6 @@ ForwardList& ForwardList::operator=(ForwardList&& other) {
 
 ForwardList::~ForwardList() {
     clear();
-    delete head_;
 }
 
 void ForwardList::copy_(const ForwardList& other) {

@@ -14,9 +14,9 @@
  * 
  * 4) Tests? 
  * 5) Refactor/verify
- * 6) Consider sentinel creation without utilizing new operator
+ * 
  * 7) Investigate universal reference for copy_()
- * 8) Expose merge?
+ * 8) Expose merge? merge inefficiency extra memory
  * 9) Reverse without head_ node? 
  * 10) Sort predicate
  */
@@ -45,7 +45,7 @@ public:
     };
 
     /* CTOR, DTOR, Copy, Move */
-    ForwardList() = default;
+    ForwardList();
     ForwardList(std::initializer_list<int> l);
     ForwardList(const ForwardList& other);
     ForwardList& operator=(const ForwardList& other);
@@ -99,5 +99,7 @@ private:
     void steal_(ForwardList&& other);
     void eraseAfter_(Iterator first, Iterator last);
     bool hasAfter_(Iterator it) const;
-    Node* head_ = new Node{};
+
+    Node sentinel_;
+    Node* head_;;
 };
