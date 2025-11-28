@@ -1,6 +1,7 @@
 #pragma once
 #include <cstddef>
 #include <initializer_list>
+#include <functional>
 
 /* Forward List:
  * - Similar API to STL std::forward_list
@@ -18,8 +19,10 @@
  * 7) Investigate universal reference for copy_()
  * 8) Expose merge? merge inefficiency extra memory
  * 9) Reverse without head_ node? 
- * 10) Sort predicate
+ * 
  */
+
+using Comp = std::function<bool(int, int)>;
 
 class ForwardList {
 private:
@@ -87,14 +90,14 @@ public:
     void reverseStack();
 
     /* Merge Sort */
-    void sort();
+    void sort(Comp predicate = [](int a, int b){ return a < b; });
 
 private:
     void printRec_(Node* head) const;
     void printReverseRec_(Node* head) const;
     void reverseRec_(Node* head);
-    void sort_(Node*& head);
-    Node* merge_(Node* left, Node* right);
+    void sort_(Node*& head, Comp& predicate);
+    Node* merge_(Node* left, Node* right, Comp& predicate);
     void copy_(const ForwardList& other);
     void steal_(ForwardList&& other);
     void eraseAfter_(Iterator first, Iterator last);

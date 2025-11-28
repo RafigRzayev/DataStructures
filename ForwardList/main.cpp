@@ -17,14 +17,9 @@ int main() {
     //flist.remove(5);
     //flist.printRec();
     //flist.printReverseRec();
-    ForwardList flist2 = {1, 5, 8};
-    auto it = flist2.beforeBegin();
-    ++it;
-    ++it;
-    ++it;
-    ++it;
-    flist2.insertAfter(it, {18, 19, 21});
+    ForwardList flist2 = {7, 1, -3, 5, 8};
+    flist2.sort([](int a, int b){ return a > b; });
     flist2.print();
-    std::cout << "size: " << flist2.size() << std::endl;
+    //std::cout << "size: " << flist2.size() << std::endl;
     return 0;
 }

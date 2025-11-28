@@ -322,11 +322,11 @@ void ForwardList::reverseStack() {
 
 /*************************************** Merge Sort ***************************************/   
 
-void ForwardList::sort() { 
-    sort_(head_->next_); 
+void ForwardList::sort(Comp predicate) { 
+    sort_(head_->next_, predicate); 
 }
 
-void ForwardList::sort_(Node*& head) {
+void ForwardList::sort_(Node*& head, Comp& predicate) {
     if(!head || !head->next_) {
         return;
     }
@@ -341,12 +341,12 @@ void ForwardList::sort_(Node*& head) {
     right = left->next_; // head of the right list
     left->next_ = nullptr; // terminator of the left list
     left = head;
-    sort_(left);
-    sort_(right);
-    head = merge_(left, right);
+    sort_(left, predicate);
+    sort_(right, predicate);
+    head = merge_(left, right, predicate);
 }
 
-ForwardList::Node* ForwardList::merge_(Node* left, Node* right) {
+ForwardList::Node* ForwardList::merge_(Node* left, Node* right, Comp& predicate) {
     Node head{0, nullptr};
     Node* it = &head;
     while(left || right) {
@@ -358,7 +358,7 @@ ForwardList::Node* ForwardList::merge_(Node* left, Node* right) {
             it->next_ = right;
             break;
         }
-        Node*& smallest = left->val_ < right->val_ ? left : right;
+        Node*& smallest = predicate(left->val_, right->val_) ? left : right;
         it->next_ = smallest;
         it = it->next_;
         smallest = smallest->next_;
