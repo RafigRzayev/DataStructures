@@ -79,6 +79,26 @@ bool ForwardList::empty() const {
     return !head_->next_;
 }
 
+bool ForwardList::operator==(const ForwardList& rhs) const {
+    if(this == &rhs) {
+        return true;
+    }
+    Node* itL = head_->next_;
+    Node* itR = rhs.head_->next_;
+    while(itL && itR) {
+        if(itL->val_ != itR->val_)  {
+            return false;
+        }
+        itL = itL->next_;
+        itR = itR->next_;
+    }
+    return !itL && !itR;
+}
+
+bool ForwardList::operator!=(const ForwardList& rhs) const {
+    return !(*this == rhs);
+}
+
 /*************************************** Access  ***************************************/
 
 ForwardList::Iterator ForwardList::beforeBegin() const {
@@ -132,12 +152,7 @@ void ForwardList::popFront() {
 }
 
 void ForwardList::pushBack(int val) {
-    if(empty()) {
-        head_->next_ = new Node{val};
-        return;
-    }
-    // get the last element
-    Node* it = head_->next_; 
+    Node* it = head_; 
     while(it->next_) {
         it = it->next_;
     }

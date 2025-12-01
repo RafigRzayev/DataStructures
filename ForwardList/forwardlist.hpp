@@ -11,14 +11,14 @@
  * 
  * TODO:
  * 1) Switch to template and caution for pass by value
- * 2) Exceptions for front/back?
+ * 
  * 
  * 4) Tests? 
  * 5) Refactor/verify
  * 
- * 7) Investigate universal reference for copy_()
- * 8) Expose merge? merge inefficiency extra memory
- * 9) Reverse without head_ node? 
+ * 
+ * 
+ * 
  * 
  */
 
@@ -59,6 +59,8 @@ public:
     /* Utility */
     size_t size() const;
     bool empty() const;
+    bool operator==(const ForwardList& rhs) const;
+    bool operator!=(const ForwardList& rhs) const;
 
     /* Access */
     Iterator beforeBegin() const;

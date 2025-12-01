@@ -17,9 +17,15 @@ int main() {
     //flist.remove(5);
     //flist.printRec();
     //flist.printReverseRec();
-    ForwardList flist2 = {7, 1, -3, 5, 8};
-    flist2.sort([](int a, int b){ return a > b; });
-    flist2.print();
+    ForwardList flist2;
+    ForwardList flist;
+    flist2.clear();
+    flist.clear();
+    if (flist == flist2) {
+        std::cout << "equal\n";
+    } else {
+        std::cout << "not equal\n";
+    }
     //std::cout << "size: " << flist2.size() << std::endl;
     return 0;
 }
