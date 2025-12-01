@@ -3,6 +3,7 @@
 #include <stack>
 #include <initializer_list>
 #include <cstddef>
+#include <cassert>
 
 /*************************************** CTOR, DTOR, Copy, Move   ***************************************/
 
@@ -101,7 +102,7 @@ bool ForwardList::operator!=(const ForwardList& rhs) const {
 
 /*************************************** Access  ***************************************/
 
-ForwardList::Iterator ForwardList::beforeBegin() const {
+const ForwardList::Iterator ForwardList::beforeBegin() const {
     return Iterator(head_);
 }
 
@@ -114,10 +115,12 @@ ForwardList::Iterator ForwardList::end() const {
 }
 
 int& ForwardList::front() {
+    assert(!empty());
     return head_->next_->val_;
 }
 
 int& ForwardList::back() {
+    assert(!empty());
     Node* it = head_->next_;
     while(it->next_) {
         it = it->next_;

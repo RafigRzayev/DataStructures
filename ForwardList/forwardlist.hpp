@@ -8,17 +8,10 @@
  * - Implemented via sentinel node at the head. It simplifies eraseAfter() and insertAfter() via beforeBegin() iterator
  * - The exposed first node is always head->next. 
  * - Sentinel is tied to the object and not stolen during move operations
+ * - Template version not implement for readability purposes
  * 
- * TODO:
- * 1) Switch to template and caution for pass by value
- * 
- * 
- * 4) Tests? 
- * 5) Refactor/verify
- * 
- * 
- * 
- * 
+ * Todo:
+ * - Tests
  * 
  */
 
@@ -63,7 +56,7 @@ public:
     bool operator!=(const ForwardList& rhs) const;
 
     /* Access */
-    Iterator beforeBegin() const;
+    const Iterator beforeBegin() const;
     Iterator begin() const;
     Iterator end() const;
     int& front();
@@ -106,5 +99,5 @@ private:
     bool hasAfter_(Iterator it) const;
 
     Node sentinel_;
-    Node* head_;;
+    Node* head_;
 };
