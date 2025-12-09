@@ -145,6 +145,14 @@ void ForwardList::pushFront(int val) {
     head_->next_ = tmp;
 }
 
+void ForwardList::pushBack(int val) {
+    Node* it = head_; 
+    while(it->next_) {
+        it = it->next_;
+    }
+    it->next_ = new Node(val);
+}
+
 void ForwardList::popFront() {
     if(empty()) {
         return;
@@ -152,14 +160,6 @@ void ForwardList::popFront() {
     Node* tmp = head_->next_->next_;
     delete head_->next_;
     head_->next_ = tmp;
-}
-
-void ForwardList::pushBack(int val) {
-    Node* it = head_; 
-    while(it->next_) {
-        it = it->next_;
-    }
-    it->next_ = new Node(val);
 }
 
 void ForwardList::popBack() {

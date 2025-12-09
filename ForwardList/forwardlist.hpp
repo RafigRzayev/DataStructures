@@ -65,8 +65,8 @@ public:
     /* Modifiers */
     void clear();
     void pushFront(int val);
-    void popFront();
     void pushBack(int val);
+    void popFront();
     void popBack();
     void remove(int val);
     void eraseAfter(Iterator it);
