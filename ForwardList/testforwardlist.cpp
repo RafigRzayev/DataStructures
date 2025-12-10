@@ -213,166 +213,1107 @@ void testPopBack() {
 
     std::cout << "Passed" << std::endl;
 }
-//
-//void testRemove() {
-//    std::cout << "test remove(): ";
-//
-//    // remove from the start of a three-element list 
-//    ForwardList list1 {1, 2, 3};
-//    list1.remove(1);
-//    assert((list1 == ForwardList{2, 3}));
-//
-//    // remove from the mid of a three-element list 
-//    ForwardList list2 {1, 2, 3};
-//    list2.remove(2);
-//    assert((list2 == ForwardList{1, 3}));
-//
-//    // remove from the end of a three-element list
-//    ForwardList list3 {1, 2, 3};
-//    list3.remove(3);
-//    assert((list3 == ForwardList{1, 2}));
-//
-//    // remove non-existent value from a three-element list 
-//    ForwardList list4 {12, 15, 95};
-//    list4.remove(18);
-//    assert((list4 == ForwardList{12, 15, 95}));
-//
-//    // remove from the start of a two-element list 
-//    ForwardList list5 {6, 8};
-//    list5.remove(6);
-//    assert((list5 == ForwardList{8}));
-//
-//    // remove from the end of a two-element list 
-//    ForwardList list6 {6, 8};
-//    list6.remove(8);
-//    assert((list6 == ForwardList{6}));
-//
-//    // remove non-existent value from a two-element list 
-//    ForwardList list7 {6, 8};
-//    list7.remove(44);
-//    assert((list7 == ForwardList{6, 8}));
-//
-//    // remove existing value from a one-element list 
-//    ForwardList list8 {6};
-//    list8.remove(6);
-//    assert((list8.empty()));
-//
-//    // remove non-existent value from a one-element list 
-//    ForwardList list9 {6};
-//    list9.remove(1);
-//    assert((list9 == ForwardList{6}));
-//
-//    // remove from an empty list
-//    ForwardList list10;
-//    list10.remove(4);
-//    assert((list10.empty()));
-//
-//    // remove a repeating value
-//    ForwardList list11 {5, 18, 14, -4, 18};
-//    list11.remove(18);
-//    assert((list11 == ForwardList{5, 14, -4}));
-//
-//    std::cout << "Passed" << std::endl;
-//}
-//
-//void testEraseAfter() {
-//    std::cout << "test EraseAfter(): ";
-//
-//    // erease after beforeBegin()
-//    ForwardList list {2, 4, 6};
-//    auto it = list.beforeBegin();
-//    list.eraseAfter(it);
-//    assert((list == ForwardList{4, 6}));
-//    
-//    // erease after begin()
-//    ForwardList list2 {2, 4, 6};
-//    auto it2 = list2.begin();
-//    list2.eraseAfter(it2);
-//    assert((list2 == ForwardList{2, 6}));
-//
-//    // erease after end()
-//    ForwardList list3 {2, 4, 6};
-//    auto it3 = list3.end();
-//    list3.eraseAfter(it3);
-//    assert((list3 == ForwardList{2, 4, 6}));
-//
-//    // erase the last element
-//    ForwardList list4 {3, 6, 9, 12};
-//    auto it4 = list4.begin();
-//    ++(++it4); 
-//    list4.eraseAfter(it4);
-//    assert((list4 == ForwardList{3, 6, 9}));
-//
-//    // erase the mid element
-//    ForwardList list5 {10, 12, 16, -5, 18};
-//    auto it5 = list5.begin();
-//    ++it5;
-//    list5.eraseAfter(it5);
-//    assert((list5 == ForwardList{10, 12, -5, 18}));
-//
-//    // erasing empty list with various iterators
-//
-//    ForwardList list6;
-//    list6.eraseAfter(list6.beforeBegin());
-//    assert(list6 == ForwardList());
-//
-//    ForwardList list7;
-//    list7.eraseAfter(list7.begin());
-//    assert(list7 == ForwardList());
-//
-//    ForwardList list8;
-//    list8.eraseAfter(list8.end());
-//    assert(list8 == ForwardList());
-//
-//    // ranged erase with the same iterator
-//    ForwardList list9{5, 50, 565};
-//    auto start9 = list9.beforeBegin();
-//    list9.eraseAfter(start9, start9);
-//    assert((list9 == ForwardList{5, 50, 565}));
-//
-//    // ranged erase with neighbours
-//    ForwardList list10{15, 450, 55};
-//    auto start10 = list10.beforeBegin();
-//    auto end10 = list10.begin();
-//    list10.eraseAfter(start10, end10);
-//    assert((list10 == ForwardList{15, 450, 55}));
-//
-//    // standard ranged erase A
-//    ForwardList list11{7, 540, 135, 443};
-//    auto start11 = list11.beforeBegin();
-//    auto end11 = ++(list11.begin());
-//    list11.eraseAfter(start11, end11);
-//    assert((list11 == ForwardList{540, 135, 443}));
-//
-//    // standard ranged erase B
-//    ForwardList list12{113, 24, 65, 89};
-//    auto start12 = ++(list12.begin());
-//    auto end12 = list12.end();
-//    list12.eraseAfter(start12, end12);
-//    assert((list12 == ForwardList{113, 24}));
-//
-//    // standard ranged erase C
-//    ForwardList list13{100, 244, 415, 98};
-//    auto start13 = list13.beforeBegin();
-//    auto end13 = list13.end();
-//    list13.eraseAfter(start13, end13);
-//    assert(list13.empty());
-//
-//    std::cout << "Passed" << std::endl;
-//}
-//
-//void testInsertAfter() {
-//
-//}
+
+void testRemove() {
+    std::cout << "test remove(): ";
+
+    // empty
+    {
+        ForwardList list {};
+        list.remove(1);
+        assert(list.empty());
+    }
+
+    // one element
+    {
+        ForwardList list {1};
+        list.remove(1);
+        assert(list.empty());
+    }
+
+    {
+        ForwardList list {1};
+        list.remove(0);
+        assert(list == ForwardList{1});
+    }
+
+    // two elements
+    {
+        ForwardList list {1, 2};
+        list.remove(1);
+        assert(list == ForwardList{2});
+    }
+
+    {
+        ForwardList list {1, 2};
+        list.remove(2);
+        assert(list == ForwardList{1});
+    }
+
+    {
+        ForwardList list {1, 2};
+        list.remove(3);
+        assert((list == ForwardList{1, 2}));
+    }
+
+    {
+        ForwardList list {2, 2};
+        list.remove(2);
+        assert(list.empty());
+    }
+
+    // three elements 
+    {
+        ForwardList list {1, 2, 3};
+        list.remove(3);
+        assert((list == ForwardList{1, 2}));
+    }
+
+    {
+        ForwardList list {1, 2, 3};
+        list.remove(2);
+        assert((list == ForwardList{1, 3}));
+    }
+
+    {
+        ForwardList list {1, 2, 3};
+        list.remove(1);
+        assert((list == ForwardList{2, 3}));
+    }
+
+    {
+        ForwardList list {1, 1, 2};
+        list.remove(1);
+        assert((list == ForwardList{2}));
+    }
+
+    {
+        ForwardList list {1, 2, 1};
+        list.remove(1);
+        assert((list == ForwardList{2}));
+    }
+
+    {
+        ForwardList list {1, 1, 2};
+        list.remove(1);
+        assert((list == ForwardList{2}));
+    }
+
+    {
+        ForwardList list {1, 1, 1};
+        list.remove(1);
+        assert(list.empty());
+    }
+
+    // four elements
+    {
+        ForwardList list {1, 2, 3, 4};
+        list.remove(1);
+        assert((list == ForwardList{2, 3, 4}));
+    }
+
+    {
+        ForwardList list {1, 2, 3, 4};
+        list.remove(2);
+        assert((list == ForwardList{1, 3, 4}));
+    }
+
+    {
+        ForwardList list {1, 2, 3, 4};
+        list.remove(3);
+        assert((list == ForwardList{1, 2, 4}));
+    }
+
+    {
+        ForwardList list {1, 2, 3, 4};
+        list.remove(4);
+        assert((list == ForwardList{1, 2, 3}));
+    }
+
+    {
+        ForwardList list {1, 2, 3, 4};
+        list.remove(5);
+        assert((list == ForwardList{1, 2, 3, 4}));
+    }
+
+    {
+        ForwardList list {1, 2, 1, 4};
+        list.remove(1);
+        assert((list == ForwardList{2, 4}));
+    }
+
+    std::cout << "Passed" << std::endl;
+}
+
+void testEraseAfter() {
+    std::cout << "test eraseAfter(): ";
+
+    // empty
+    {
+        ForwardList list;
+        list.eraseAfter(list.beforeBegin());
+        assert(list.empty());
+    }
+
+    {
+        ForwardList list;
+        list.eraseAfter(list.begin());
+        assert(list.empty());
+    }
+
+    {
+        ForwardList list;
+        list.eraseAfter(list.end());
+        assert(list.empty());
+    }
+
+    {
+        ForwardList list;
+        list.eraseAfter(list.beforeBegin(), list.beforeBegin());
+        assert(list.empty());
+    }
+
+    {
+        ForwardList list;
+        list.eraseAfter(list.beforeBegin(), list.begin());
+        assert(list.empty());
+    }
+
+    {
+        ForwardList list;
+        list.eraseAfter(list.beforeBegin(), list.end());
+        assert(list.empty());
+    }
+
+    {
+        ForwardList list;
+        list.eraseAfter(list.begin(), list.begin());
+        assert(list.empty());
+    }
+
+    {
+        ForwardList list;
+        list.eraseAfter(list.begin(), list.end());
+        assert(list.empty());
+    }
+
+    {
+        ForwardList list;
+        list.eraseAfter(list.end(), list.end());
+        assert(list.empty());
+    }
+
+    // one element
+    {
+        ForwardList list = {1};
+        list.eraseAfter(list.beforeBegin());
+        assert(list.empty());
+    }
+
+    {
+        ForwardList list = {1};
+        list.eraseAfter(list.begin());
+        assert((list == ForwardList{1}));
+    }
+
+    {
+        ForwardList list = {1};
+        list.eraseAfter(list.end());
+        assert((list == ForwardList{1}));
+    }
+
+    {
+        ForwardList list = {1};
+        list.eraseAfter(list.beforeBegin(), list.beforeBegin());
+        assert((list == ForwardList{1}));
+    }
+
+    {
+        ForwardList list = {1};
+        list.eraseAfter(list.beforeBegin(), list.begin());
+        assert((list == ForwardList{1}));
+    }
+
+    {
+        ForwardList list = {1};
+        list.eraseAfter(list.beforeBegin(), list.end());
+        assert(list.empty());
+    }
+
+    {
+        ForwardList list = {1};
+        list.eraseAfter(list.begin(), list.begin());
+        assert((list == ForwardList{1}));
+    }
+
+    {
+        ForwardList list = {1};
+        list.eraseAfter(list.begin(), list.end());
+        assert((list == ForwardList{1}));
+    }
+
+    {
+        ForwardList list = {1};
+        list.eraseAfter(list.end(), list.end());
+        assert((list == ForwardList{1}));
+    }
+
+    // two elements
+    {
+        ForwardList list = {1, 2};
+        list.eraseAfter(list.beforeBegin());
+        assert((list == ForwardList{2}));
+    }
+
+    {
+        ForwardList list = {1, 2};
+        list.eraseAfter(list.begin());
+        assert((list == ForwardList{1}));
+    }
+
+    {
+        ForwardList list = {1, 2};
+        list.eraseAfter(list.end());
+        assert((list == ForwardList{1, 2}));
+    }
+
+    {
+        ForwardList list = {1, 2};
+        list.eraseAfter(list.beforeBegin(), list.beforeBegin());
+        assert((list == ForwardList{1, 2}));
+    }
+
+    {
+        ForwardList list = {1, 2};
+        list.eraseAfter(list.beforeBegin(), list.begin());
+        assert((list == ForwardList{1, 2}));
+    }
+
+    {
+        ForwardList list = {1, 2};
+        list.eraseAfter(list.beforeBegin(), list.end());
+        assert(list.empty());
+    }
+
+    {
+        ForwardList list = {1, 2};
+        list.eraseAfter(list.begin(), list.begin());
+        assert((list == ForwardList{1, 2}));
+    }
+
+    {
+        ForwardList list = {1, 2};
+        list.eraseAfter(list.begin(), list.end());
+        assert((list == ForwardList{1}));
+    }
+
+    {
+        ForwardList list = {1, 2};
+        list.eraseAfter(list.end(), list.end());
+        assert((list == ForwardList{1, 2}));
+    }
+
+    {
+        ForwardList list = {1, 2};
+        auto it = list.begin();
+        ++it;
+        list.eraseAfter(it, list.end());
+        assert((list == ForwardList{1, 2}));
+    }
+
+    // three elements
+    {
+        ForwardList list = {1, 2, 3};
+        list.eraseAfter(list.beforeBegin());
+        assert((list == ForwardList{2, 3}));
+    }
+
+    {
+        ForwardList list = {1, 2, 3};
+        list.eraseAfter(list.begin());
+        assert((list == ForwardList{1, 3}));
+    }
+
+    {
+        ForwardList list = {1, 2, 3};
+        list.eraseAfter(list.end());
+        assert((list == ForwardList{1, 2, 3}));
+    }
+
+    {
+        ForwardList list = {1, 2, 3};
+        list.eraseAfter(list.beforeBegin(), list.beforeBegin());
+        assert((list == ForwardList{1, 2, 3}));
+    }
+
+    {
+        ForwardList list = {1, 2, 3};
+        list.eraseAfter(list.beforeBegin(), list.begin());
+        assert((list == ForwardList{1, 2, 3}));
+    }
+
+    {
+        ForwardList list = {1, 2, 3};
+        list.eraseAfter(list.beforeBegin(), list.end());
+        assert(list.empty());
+    }
+
+    {
+        ForwardList list = {1, 2, 3};
+        list.eraseAfter(list.begin(), list.begin());
+        assert((list == ForwardList{1, 2, 3}));
+    }
+
+    {
+        ForwardList list = {1, 2, 3};
+        list.eraseAfter(list.begin(), list.end());
+        assert((list == ForwardList{1}));
+    }
+
+    {
+        ForwardList list = {1, 2, 3};
+        list.eraseAfter(list.end(), list.end());
+        assert((list == ForwardList{1, 2, 3}));
+    }
+
+    {
+        ForwardList list = {1, 2, 3};
+        auto it = list.begin();
+        ++it;
+        list.eraseAfter(it, list.end());
+        assert((list == ForwardList{1, 2}));
+    }
+
+    // > 3 elements
+    {
+        ForwardList list = {1, 2, 3, 4, 5, 6, 7};
+        auto it = list.begin();
+        ++it; // 2
+        auto it2 = list.begin();
+        ++(++(++(++it2))); // 5
+        list.eraseAfter(it, it2);
+        assert((list == ForwardList{1, 2, 5, 6, 7}));
+    }
+
+    {
+        ForwardList list = {1, 2, 3, 4, 5, 6, 7};
+        auto it = list.begin();
+        ++(++(++(++it))); // 5
+        list.eraseAfter(it, list.end());
+        assert((list == ForwardList{1, 2, 3, 4, 5}));
+    }
+
+    std::cout << "Passed" << std::endl;
+}
+
+void testInsertAfter() {
+    std::cout << "test insertAfter(): ";
+
+    // empty
+    {
+        ForwardList list;
+        list.insertAfter(list.beforeBegin(), 1);
+        assert((list == ForwardList{1}));
+    }
+
+    {
+        ForwardList list;
+        list.insertAfter(list.beforeBegin(), {1, 2});
+        assert((list == ForwardList{1, 2}));
+    }
+
+    {
+        ForwardList list;
+        list.insertAfter(list.begin(), 1);
+        assert((list.empty()));
+    }
+
+    {
+        ForwardList list;
+        list.insertAfter(list.begin(), {1, 2});
+        assert((list.empty()));
+    }
+
+    {
+        ForwardList list;
+        list.insertAfter(list.end(), 1);
+        assert((list.empty()));
+    }
+
+    {
+        ForwardList list;
+        list.insertAfter(list.end(), {1, 2});
+        assert((list.empty()));
+    }
+
+    // one element
+    {
+        ForwardList list{1};
+        list.insertAfter(list.beforeBegin(), 2);
+        assert((list == ForwardList{2, 1}));
+    }
+
+    {
+        ForwardList list{1};
+        list.insertAfter(list.beforeBegin(), {2, 3});
+        assert((list == ForwardList{2, 3, 1}));
+    }
+
+    {
+        ForwardList list{1};
+        list.insertAfter(list.begin(), 2);
+        assert((list == ForwardList{1, 2}));
+    }
+
+    {
+        ForwardList list{1};
+        list.insertAfter(list.begin(), {2, 3});
+        assert((list == ForwardList{1, 2, 3}));
+    }
+
+    {
+        ForwardList list{1};
+        list.insertAfter(list.end(), 2);
+        assert((list == ForwardList{1}));
+    }
+
+    {
+        ForwardList list{1};
+        list.insertAfter(list.end(), {2, 3});
+        assert((list == ForwardList{1}));
+    }
+
+    // two elements
+    {
+        ForwardList list{1, 2};
+        list.insertAfter(list.beforeBegin(), 3);
+        assert((list == ForwardList{3, 1, 2}));
+    }
+
+    {
+        ForwardList list{1, 2};
+        list.insertAfter(list.beforeBegin(), {3, 4});
+        assert((list == ForwardList{3, 4, 1, 2}));
+    }
+
+    {
+        ForwardList list{1, 2};
+        list.insertAfter(list.begin(), 3);
+        assert((list == ForwardList{1, 3, 2}));
+    }
+
+    {
+        ForwardList list{1, 2};
+        list.insertAfter(list.begin(), {3, 4});
+        assert((list == ForwardList{1, 3, 4, 2}));
+    }
+
+    {
+        ForwardList list{1, 2};
+        list.insertAfter(list.end(), 2);
+        assert((list == ForwardList{1, 2}));
+    }
+
+    {
+        ForwardList list{1, 2};
+        list.insertAfter(list.end(), {2, 3});
+        assert((list == ForwardList{1, 2}));
+    }
+
+    {
+        ForwardList list{1, 2};
+        auto it = ++(list.begin());
+        list.insertAfter(it, 3);
+        assert((list == ForwardList{1, 2, 3}));
+    }
+
+    {
+        ForwardList list{1, 2};
+        auto it = ++(list.begin());
+        list.insertAfter(it, {3, 4});
+        assert((list == ForwardList{1, 2, 3, 4}));
+    }
+
+    // three elements
+
+    {
+        ForwardList list{1, 2, 3};
+        list.insertAfter(list.beforeBegin(), 4);
+        assert((list == ForwardList{4, 1, 2, 3}));
+    }
+
+    {
+        ForwardList list{1, 2, 3};
+        list.insertAfter(list.beforeBegin(), {4, 5});
+        assert((list == ForwardList{4, 5, 1, 2, 3}));
+    }
+
+    {
+        ForwardList list{1, 2, 3};
+        list.insertAfter(list.begin(), 4);
+        assert((list == ForwardList{1, 4, 2, 3}));
+    }
+
+    {
+        ForwardList list{1, 2, 3};
+        list.insertAfter(list.begin(), {4, 5});
+        assert((list == ForwardList{1, 4, 5, 2, 3}));
+    }
+
+    {
+        ForwardList list{1, 2, 3};
+        list.insertAfter(list.end(), 2);
+        assert((list == ForwardList{1, 2, 3}));
+    }
+
+    {
+        ForwardList list{1, 2, 3};
+        list.insertAfter(list.end(), {2, 3});
+        assert((list == ForwardList{1, 2, 3}));
+    }
+
+    {
+        ForwardList list{1, 2, 3};
+        auto it = ++(list.begin());
+        list.insertAfter(it, 4);
+        assert((list == ForwardList{1, 2, 4, 3}));
+    }
+
+    {
+        ForwardList list{1, 2, 3};
+        auto it = ++(list.begin());
+        list.insertAfter(it, {4, 5});
+        assert((list == ForwardList{1, 2, 4, 5, 3}));
+    }
+
+    {
+        ForwardList list{1, 2, 3};
+        auto it = ++(++(list.begin()));
+        list.insertAfter(it, 4);
+        assert((list == ForwardList{1, 2, 3, 4}));
+    }
+
+    {
+        ForwardList list{1, 2, 3};
+        auto it = ++(++(list.begin()));
+        list.insertAfter(it, {4, 5});
+        assert((list == ForwardList{1, 2, 3, 4, 5}));
+    }
+
+    // > 3 elements
+
+    {
+        ForwardList list{1, 2, 3, 4, 5, 6, 7 };
+        auto it = ++(++(++(list.begin()))); // 4
+        list.insertAfter(it, 8);
+        assert((list == ForwardList{1, 2, 3, 4, 8, 5, 6, 7}));
+    }
+
+    {
+        ForwardList list{1, 2, 3, 4, 5, 6, 7 };
+        auto it = ++(++(++(list.begin()))); // 4
+        list.insertAfter(it, {8, 9});
+        assert((list == ForwardList{1, 2, 3, 4, 8, 9, 5, 6, 7}));
+    }
+
+    std::cout << "Passed" << std::endl;
+}
+
+void testSize() {
+    std::cout << "test size(): ";
+
+    {
+        ForwardList list;
+        assert(list.size() == 0);
+    }
+
+    {
+        ForwardList list{5};
+        assert(list.size() == 1);
+    }
+
+    {
+        ForwardList list{5, 10};
+        assert(list.size() == 2);
+    }
+
+    {
+        ForwardList list{5, 10, 15};
+        assert(list.size() == 3);
+    }
+
+    {
+        ForwardList list{5, 10, 15, 20};
+        assert(list.size() == 4);
+    }
+
+    std::cout << "Passed" << std::endl;
+}
+
+void testEmpty() {
+    std::cout << "test empty(): ";
+
+    {
+        ForwardList list;
+        assert(list.empty());
+    }
+
+    {
+        ForwardList list{5};
+        assert(!list.empty());
+    }
+
+    {
+        ForwardList list{5, 10};
+        assert(!list.empty());
+    }
+
+    {
+        ForwardList list{5, 10, 15};
+        assert(!list.empty());
+    }
+
+    {
+        ForwardList list{5, 10, 15, 20};
+        assert(!list.empty());
+    }
+
+    std::cout << "Passed" << std::endl;
+}
+
+void testEquality() {
+    std::cout << "test ==: ";
+
+    {
+        ForwardList list;
+        assert(list == ForwardList());
+    }
+
+    {
+        ForwardList list;
+        assert(!(list == ForwardList{1}));
+    }
+
+    {
+        ForwardList list{5};
+        assert(list == ForwardList{5});
+    }
+
+    {
+        ForwardList list{5};
+        assert(!(list == ForwardList {8}));
+    }
+
+    {
+        ForwardList list{5, 10};
+        assert((list == ForwardList{5, 10}));
+    }
+
+    {
+        ForwardList list{5, 10};
+        assert(!(list == ForwardList{5, 6}));
+    }
+
+    {
+        ForwardList list{5, 10, 15};
+        assert((list == ForwardList{5, 10, 15}));
+    }
+
+    {
+        ForwardList list{5, 10, 15};
+        assert(!(list == ForwardList{5, 3, 15}));
+    }
+
+    {
+        ForwardList list{5, 10, 15, 20};
+        assert((list == ForwardList{5, 10, 15, 20}));
+    }
+
+    {
+        ForwardList list{5, 10, 15, 20};
+        assert(!(list == ForwardList{5, 10, 15, 21}));
+    }
+
+    std::cout << "Passed" << std::endl;
+}
+
+void testInequality() {
+    std::cout << "test !=: ";
+
+    {
+        ForwardList list;
+        assert(!(list != ForwardList()));
+    }
+
+    {
+        ForwardList list;
+        assert((list != ForwardList{1}));
+    }
+
+    {
+        ForwardList list{5};
+        assert(!(list != ForwardList{5}));
+    }
+
+    {
+        ForwardList list{5};
+        assert((list != ForwardList {8}));
+    }
+
+    {
+        ForwardList list{5, 10};
+        assert(!(list != ForwardList{5, 10}));
+    }
+
+    {
+        ForwardList list{5, 10};
+        assert((list != ForwardList{5, 6}));
+    }
+
+    {
+        ForwardList list{5, 10, 15};
+        assert(!(list != ForwardList{5, 10, 15}));
+    }
+
+    {
+        ForwardList list{5, 10, 15};
+        assert((list != ForwardList{5, 3, 15}));
+    }
+
+    {
+        ForwardList list{5, 10, 15, 20};
+        assert(!(list != ForwardList{5, 10, 15, 20}));
+    }
+
+    {
+        ForwardList list{5, 10, 15, 20};
+        assert((list != ForwardList{5, 10, 15, 21}));
+    }
+
+    std::cout << "Passed" << std::endl;
+}
+
+void testAccess() {
+    std::cout << "test access API: ";
+
+    {
+        ForwardList list;
+        auto it = list.beforeBegin();
+        ++it;
+        assert(it == list.end());
+    }
+
+    {
+        ForwardList list;
+        assert(list.begin() == list.end());
+    }
+
+    {
+        ForwardList list{1};
+        auto it = list.beforeBegin();
+        ++it;
+        assert(*it == 1);
+    }
+
+    {
+        ForwardList list{1};
+        auto it = list.begin();
+        assert(*it == 1);
+    }
+
+    {
+        ForwardList list{1};
+        auto it = ++(list.begin());
+        assert(it == list.end());
+    }
+
+    {
+        ForwardList list{1, 2};
+        auto it = list.beforeBegin();
+        ++it;
+        assert(*it == 1);
+        ++it;
+        assert(*it == 2);
+    }
+
+    {
+        ForwardList list{1, 2};
+        auto it = list.begin();
+        assert(*it == 1);
+        ++it;
+        assert(*it == 2);
+    }
+
+    {
+        ForwardList list{1, 2, 3};
+        auto it = list.begin();
+        *it = 5;
+        ++it;
+        *it = 10;
+        ++it;
+        *it = 15;
+        assert((list == ForwardList{5, 10, 15}));
+    }
+
+    {
+        ForwardList list{1};
+        assert(list.front() == 1);
+        assert(list.back() == 1);
+    }
+
+    {
+        ForwardList list{1, 2};
+        assert(list.front() == 1);
+        assert(list.back() == 2);
+    }
+
+    {
+        ForwardList list{1, 2, 3};
+        assert(list.front() == 1);
+        assert(list.back() == 3);
+    }
+
+    {
+        ForwardList list{1, 2, 3, 4};
+        assert(list.front() == 1);
+        assert(list.back() == 4);
+    }
+
+    {
+        ForwardList list{1, 2, 3, 4};
+        int& f = list.front();
+        f = 80;
+        int& b = list.back();
+        b = 90;
+        assert((list == ForwardList{80, 2, 3, 90}));
+    }
+
+    std::cout << "Passed" << std::endl;
+}
 
 
-int main() {
+// testing just one of the reverse funtions
+void testReverse() {
+    std::cout << "test reverse(): ";
+
+    {
+        ForwardList list;
+        list.reverse();
+        assert(list.empty());
+    }
+
+    {
+        ForwardList list{2};
+        list.reverse();
+        assert(list == ForwardList{2});
+    }
+
+    {
+        ForwardList list{2, 4};
+        list.reverse();
+        assert((list == ForwardList{4, 2}));
+    }
+
+    {
+        ForwardList list{2, 4, 6};
+        list.reverse();
+        assert((list == ForwardList{6, 4, 2}));
+    }
+
+    {
+        ForwardList list{2, 4, 6, 8};
+        list.reverse();
+        assert((list == ForwardList{8, 6, 4, 2}));
+    }
+
+    {
+        ForwardList list{2, 4, 6, 8};
+        list.reverse();
+        list.reverse();
+        assert((list == ForwardList{2, 4, 6, 8}));
+    }
+
+    std::cout << "Passed" << std::endl;
+}
+
+void testSort() {
+    std::cout << "test sort(): ";
+
+    {
+        ForwardList list;
+        list.sort();
+        assert(list.empty());
+    }
+
+    {
+        ForwardList list{2};
+        list.sort();
+        assert(list == ForwardList{2});
+    }
+
+    {
+        ForwardList list{2, 4};
+        list.sort();
+        assert((list == ForwardList{2, 4}));
+    }
+
+    {
+        ForwardList list{4, 2};
+        list.sort();
+        assert((list == ForwardList{2, 4}));
+    }
+
+    {
+        ForwardList list{2, 4, 6};
+        list.sort();
+        assert((list == ForwardList{2, 4, 6}));
+    }
+
+    {
+        ForwardList list{2, 6, 4};
+        list.sort();
+        assert((list == ForwardList{2, 4, 6}));
+    }
+
+    {
+        ForwardList list{4, 2, 6};
+        list.sort();
+        assert((list == ForwardList{2, 4, 6}));
+    }
+
+    {
+        ForwardList list{4, 6, 2};
+        list.sort();
+        assert((list == ForwardList{2, 4, 6}));
+    }
+
+    {
+        ForwardList list{6, 2, 4};
+        list.sort();
+        assert((list == ForwardList{2, 4, 6}));
+    }
+
+    {
+        ForwardList list{6, 4, 2};
+        list.sort();
+        assert((list == ForwardList{2, 4, 6}));
+    }
+
+    {
+        ForwardList list{2, 3, 3};
+        list.sort();
+        assert((list == ForwardList{2, 3, 3}));
+    }
+
+    {
+        ForwardList list{3, 2, 3};
+        list.sort();
+        assert((list == ForwardList{2, 3, 3}));
+    }
+
+    {
+        ForwardList list{3, 3, 2};
+        list.sort();
+        assert((list == ForwardList{2, 3, 3}));
+    }
+
+    {
+        ForwardList list{5, 1, 0, 8, -199};
+        list.sort();
+        assert((list == ForwardList{-199, 0, 1, 5, 8}));
+    }
+
+    {
+        ForwardList list{5, 1, 0, 8, -199};
+        list.sort();
+        assert((list == ForwardList{-199, 0, 1, 5, 8}));
+    }
+
+    {
+        ForwardList list{5, 1, 0, 8, -199};
+        list.sort([](int x, int y){ return x > y;});
+        assert((list == ForwardList{8, 5, 1, 0, -199}));
+    }
+
+    std::cout << "Passed" << std::endl;
+}
+
+void testConstructors() {
+    std::cout << "test constructors: ";
+
+    // default ctor
+    {
+        ForwardList list;
+        assert(list.empty());
+    }
+
+    // list initializer
+    {
+        ForwardList list{1, 2, 3, 4};
+        int i = 1;
+        for(auto e : list) {
+            assert(e == i);
+            ++i;
+        }
+    }
+
+    // copy ctor
+    {
+        ForwardList list1;
+        ForwardList list2 {1, 2, 3};
+        list1 = list2;
+        // verify that list1 received the values of list2
+        int i = 1;
+        for(auto e : list1) {
+            assert(e == i);
+            ++i;
+        }
+        // verify that list2 is intact
+        i = 1;
+        for(auto e : list2) {
+            assert(e == i);
+            ++i;
+        }
+        // verify that list2 doesn't share memory with list1
+        auto it = list1.begin();
+        *it = 8;
+        assert(list1.front() == 8 && list2.front() == 1);
+    }
+
+    {
+        
+    }
+
+    // self-assignment
+    {
+        ForwardList list {5};
+        list = list;
+        assert(list == ForwardList{5});
+    }
+
+    std::cout << "Passed" << std::endl;
+}
+
+void runTests() {
     testClear();
     testPushFront();
     testPushBack();
     testPopFront();
     testPopBack();
-    //testRemove();
-    //testEraseAfter();
+    testRemove();
+    testEraseAfter();
+    testInsertAfter();
+    testSize();
+    testEmpty();
+    testEquality();
+    testInequality();
+    testAccess();
+    testReverse();
+    testSort();
+    testConstructors();
+}
+
+int main() {
+    runTests();
     return 0;
 }
