@@ -15,6 +15,7 @@ void testInequality();
 void testAccess();
 void testReverse();
 void testSort();
+void testMerge();
 void testCtorsCopyAndMove();
 
 void runTests();
