@@ -1238,8 +1238,70 @@ void testSort() {
     std::cout << "Passed" << std::endl;
 }
 
-void testConstructors() {
-    std::cout << "test constructors: ";
+void testMerge() {
+    std::cout << "test merge(): ";
+
+    {
+        ForwardList list1;
+        ForwardList list2;
+        list1.merge(list2);
+        assert(list1.empty());
+        assert(list2.empty());
+    }
+
+    {
+        ForwardList list1{5};
+        ForwardList list2;
+        list1.merge(list2);
+        assert((list1 == ForwardList{5}));
+        assert((list2.empty()));
+    }
+
+    {
+        ForwardList list1;
+        ForwardList list2{3};
+        list1.merge(list2);
+        assert((list1 == ForwardList{3}));
+        assert((list2.empty()));
+    }
+
+    {
+        ForwardList list1{5};
+        ForwardList list2{3};
+        list1.merge(list2);
+        assert((list1 == ForwardList{3, 5}));
+        assert((list2.empty()));
+    }
+
+    {
+        ForwardList list1{3};
+        ForwardList list2{5};
+        list1.merge(list2);
+        assert((list1 == ForwardList{3, 5}));
+        assert((list2.empty()));
+    }
+
+    {
+        ForwardList list1{-5, 5, 15};
+        ForwardList list2{1, 2, 6};
+        list1.merge(list2);
+        assert((list1 == ForwardList{-5, 1, 2, 5, 6, 15}));
+        assert((list2.empty()));
+    }
+
+    {
+        ForwardList list1{1, 10, 100, 425};
+        ForwardList list2{-500, 350, 600, 1000, 90000};
+        list1.merge(list2);
+        assert((list1 == ForwardList{-500, 1, 10, 100, 350, 425, 600, 1000, 90000}));
+        assert((list2.empty()));
+    }
+
+    std::cout << "Passed" << std::endl;
+}
+
+void testCtorsCopyAndMove() {
+    std::cout << "test ctors, copy and move: ";
 
     // default ctor
     {
@@ -1247,7 +1309,7 @@ void testConstructors() {
         assert(list.empty());
     }
 
-    // list initializer
+    //  initializer list ctor
     {
         ForwardList list{1, 2, 3, 4};
         int i = 1;
@@ -1259,35 +1321,50 @@ void testConstructors() {
 
     // copy ctor
     {
-        ForwardList list1;
-        ForwardList list2 {1, 2, 3};
-        list1 = list2;
-        // verify that list1 received the values of list2
-        int i = 1;
-        for(auto e : list1) {
-            assert(e == i);
-            ++i;
-        }
-        // verify that list2 is intact
-        i = 1;
-        for(auto e : list2) {
-            assert(e == i);
-            ++i;
-        }
-        // verify that list2 doesn't share memory with list1
-        auto it = list1.begin();
-        *it = 8;
+        ForwardList list1 {1, 2, 3};
+        ForwardList list2 = list1;
+        assert((list1 == ForwardList{1, 2, 3}));
+        assert((list2 == ForwardList{1, 2, 3}));
+        // verify that they don't share memory
+        *list1.begin() = 8;
         assert(list1.front() == 8 && list2.front() == 1);
     }
 
+    // copy assignment
     {
-        
+        ForwardList list1;
+        ForwardList list2 {1, 2, 3};
+        list1 = list2;
+        assert((list1 == ForwardList{1, 2, 3}));
+        assert((list2 == ForwardList{1, 2, 3}));
+        // verify that they don't share memory
+        list1.clear();
+        assert(list1.empty() && list2.size() == 3);
+    }
+
+    // move ctor
+    {
+        ForwardList list{4, 3, 2};
+        ForwardList list2 = std::move(list);
+        assert(list.empty());
+        assert((list2 == ForwardList{4, 3, 2}));
+    }
+
+    // move assignment
+    {
+        ForwardList list1 {1, 2, 3};
+        ForwardList list2 {4, 5, 6};
+        list1 = std::move(list2);
+        assert((list1 == ForwardList{4, 5, 6}));
+        assert(list2.empty());
     }
 
     // self-assignment
     {
         ForwardList list {5};
         list = list;
+        assert(list == ForwardList{5});
+        list = std::move(list);
         assert(list == ForwardList{5});
     }
 
@@ -1310,10 +1387,6 @@ void runTests() {
     testAccess();
     testReverse();
     testSort();
-    testConstructors();
-}
-
-int main() {
-    runTests();
-    return 0;
+    testMerge();
+    testCtorsCopyAndMove();
 }

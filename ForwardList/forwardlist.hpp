@@ -84,8 +84,9 @@ public:
     void reverseRec();
     void reverseStack();
 
-    /* Merge Sort */
+    /* Merge-Sort and Merge */
     void sort(Comp predicate = [](int a, int b){ return a < b; });
+    void merge(ForwardList& other, Comp predicate = [](int a, int b) { return a < b; });
 
 private:
     void printRec_(Node* head) const;
