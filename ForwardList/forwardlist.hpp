@@ -8,7 +8,7 @@
  * - Implemented via sentinel node at the head. It simplifies eraseAfter() and insertAfter() via beforeBegin() iterator
  * - The exposed first node is always head->next. 
  * - Sentinel is tied to the object and not stolen during move operations
- * - Template version not implement for readability purposes */
+ * - Template version not implemented for readability purposes */
 
 using Comp = std::function<bool(int, int)>;
 
