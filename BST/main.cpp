@@ -10,6 +10,8 @@ int main() {
     bst.insert(11);
     bst.insert(-15);
     bst.insert(-10);
+    bst.remove(1);
     bst.levelOrder([](int val){ std::cout << val << std::endl; });
-    //std::cout << bst.size() << std::endl;
+
+
 }
