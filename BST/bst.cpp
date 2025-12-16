@@ -4,6 +4,37 @@
 #include <queue>
 #include <cassert>
 
+BST::BST(std::initializer_list<int> list) {
+    for(auto e : list) {
+        insert(e);
+    }
+}
+
+BST::BST(const BST& rhs) {
+    Node* it = rhs.head_;
+
+}
+
+BST& BST::operator=(const BST& rhs) {
+    if(this == &rhs) {
+        return *this;
+    }
+}
+
+BST::BST(BST&& rhs) {
+
+}
+
+BST& BST::operator=(BST&& rhs) {
+    if(this == &rhs) {
+        return *this;
+    }
+}
+
+BST::~BST() {
+    clear();
+}
+
 int BST::min() const {
     assert(!empty());
     Node* it = head_;
@@ -55,6 +86,15 @@ size_t BST::height_(Node* head) const {
     size_t left_height = height_(head->left_);
     size_t right_height = height_(head->right_);
     return std::max(left_height, right_height) + 1;
+}
+
+void BST::clear_(Node* head) {
+    if(!head) {
+        return;
+    }
+    clear_(head->left_);
+    clear_(head->right_);
+    delete head;
 }
 
 bool BST::search_(int val, Node* head) const {
