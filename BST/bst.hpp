@@ -18,8 +18,8 @@ public:
     BST(std::initializer_list<int> list);
     BST(const BST& rhs);
     BST& operator=(const BST& rhs);
-    BST(BST&& rhs);
-    BST& operator=(BST&& rhs);
+    BST(BST&& rhs) noexcept;
+    BST& operator=(BST&& rhs) noexcept;
     ~BST();
 
     bool empty() const { return !head_;}
@@ -45,5 +45,6 @@ private:
     void preOrder_(Node* head, callback_t cb);
     void inOrder_(Node* head, callback_t cb);
     void postOrder_(Node* head, callback_t cb);
+    Node* clone_(const Node* root);
     Node* head_ = nullptr;
 };

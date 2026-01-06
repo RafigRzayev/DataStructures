@@ -10,29 +10,43 @@ BST::BST(std::initializer_list<int> list) {
     }
 }
 
-BST::BST(const BST& rhs) {
-    Node* it = rhs.head_;
-
-}
+BST::BST(const BST& rhs) : head_{clone_(rhs.head_)} { }
 
 BST& BST::operator=(const BST& rhs) {
     if(this == &rhs) {
         return *this;
     }
+    clear();
+    head_ = clone_(rhs.head_);
+    return *this;
 }
 
-BST::BST(BST&& rhs) {
-
+BST::BST(BST&& rhs) noexcept : head_{rhs.head_}  {
+    rhs.head_ = nullptr;
 }
 
-BST& BST::operator=(BST&& rhs) {
+BST& BST::operator=(BST&& rhs) noexcept {
     if(this == &rhs) {
         return *this;
     }
+    clear();
+    head_ = rhs.head_;
+    rhs.head_ = nullptr;
+    return *this;
 }
 
 BST::~BST() {
     clear();
+}
+
+BST::Node* BST::clone_(const Node* root) {
+    if(!root) {
+        return nullptr;
+    }
+    Node* tmp = new Node{root->val_};
+    tmp->left_ = clone_(root->left_);
+    tmp->right_ = clone_(root->right_);
+    return tmp;
 }
 
 int BST::min() const {
