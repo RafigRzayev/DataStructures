@@ -3,6 +3,13 @@
 #include <initializer_list>
 #include <functional>
 
+/*
+    Binary Search Tree class needed for Map implementation
+  - Doesn't allow duplicates
+  - Not self-balancing for the moment (AVL / RBT will be added later)
+  - Non-template implementation for readability
+*/
+
 using callback_t = std::function<void(int&)>;
 
 class BST {
@@ -45,7 +52,7 @@ private:
     Node* insert(int val, Node* root);
     Node* remove(int val, Node* root); 
     void clear(Node* root);
-    Node* clone_(const Node* root);
+    Node* clone(const Node* root);
     void preOrder(Node* root, callback_t cb);
     void inOrder(Node* root, callback_t cb);
     void postOrder(Node* root, callback_t cb);

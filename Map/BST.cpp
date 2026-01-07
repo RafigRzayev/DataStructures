@@ -10,14 +10,14 @@ BST::BST(std::initializer_list<int> list) {
     }
 }
 
-BST::BST(const BST& rhs) : root_{clone_(rhs.root_)} { }
+BST::BST(const BST& rhs) : root_{clone(rhs.root_)} { }
 
 BST& BST::operator=(const BST& rhs) {
     if(this == &rhs) {
         return *this;
     }
     clear();
-    root_ = clone_(rhs.root_);
+    root_ = clone(rhs.root_);
     return *this;
 }
 
@@ -39,13 +39,13 @@ BST::~BST() {
     clear();
 }
 
-BST::Node* BST::clone_(const Node* root) {
+BST::Node* BST::clone(const Node* root) {
     if(!root) {
         return nullptr;
     }
     Node* tmp = new Node{root->val};
-    tmp->left = clone_(root->left);
-    tmp->right = clone_(root->right);
+    tmp->left = clone(root->left);
+    tmp->right = clone(root->right);
     return tmp;
 }
 
@@ -90,14 +90,17 @@ bool BST::search(int val, Node* root) const {
     if(root->val == val) {
         return true;
     }
-    return search(val, (val <= root->val ? root->left : root->right));
+    return search(val, (val < root->val ? root->left : root->right));
 }
 
 BST::Node* BST::insert(int val, Node* root) {
     if(!root) {
         return new Node(val);
     }
-    if(val <= root->val) {
+    if(val == root->val) {
+        return root;
+    }
+    if(val < root->val) {
         root->left = insert(val, root->left);
     } else {
         root->right = insert(val, root->right);
