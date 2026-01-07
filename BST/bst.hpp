@@ -2,6 +2,15 @@
 
 #include <functional>
 #include <initializer_list>
+#include <cstddef>
+
+/*
+        Binary Search Tree
+  - Allows duplicates on the left sub-tree
+  - Not self-balancing
+  - Non-template implementation for readability
+  - Traversal functions provide callback parameter to do perform operations on the node values 
+*/
 
 using callback_t = std::function<void(int&)>;
 
