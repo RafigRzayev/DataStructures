@@ -1,4 +1,4 @@
-#include "BST.hpp"
+#include "bst.hpp"
 #include <cstddef>
 #include <algorithm>
 #include <cassert>
