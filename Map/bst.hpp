@@ -7,9 +7,13 @@
 #include <functional>
 #include <queue>
 
-template <typename T>
+template <typename T, typename Compare = std::less<T>>
 class BST {
     using cb_t = std::function<void(T&)>;
+    Compare comp;
+    bool equals(const T& a, const T&b) const { return !comp(a, b) && !comp(b,a);}
+    bool less(const T& a, const T&b) const { return comp(a, b);}
+    bool greater(const T& a, const T&b) const { return comp(b, a);}
 private:
     struct Node {
         T val;
@@ -60,26 +64,26 @@ private:
 /* -------------------------------------------------- CTOR/DTOR/Copy/Move -------------------------------------------------- */
 
 // user-defined CTOR
-template<typename T>
-BST<T>::BST(std::initializer_list<T> list) {
+template<typename T, typename Compare>
+BST<T, Compare>::BST(std::initializer_list<T> list) {
     for(auto& e : list) {
         insert(e);
     }
 }
 
 // copy CTOR
-template<typename T>
-BST<T>::BST(const BST& rhs) : root_{clone_(rhs.root_)} { }
+template<typename T, typename Compare>
+BST<T, Compare>::BST(const BST& rhs) : root_{clone_(rhs.root_)} { }
 
 // move CTOR
-template<typename T>
-BST<T>::BST(BST&& rhs) noexcept : root_{rhs.root_} {
+template<typename T, typename Compare>
+BST<T, Compare>::BST(BST&& rhs) noexcept : root_{rhs.root_} {
     rhs.root_ = nullptr;
 }
 
 // copy assignment
-template<typename T>
-BST<T>& BST<T>::operator=(const BST& rhs) {
+template<typename T, typename Compare>
+BST<T, Compare>& BST<T, Compare>::operator=(const BST& rhs) {
     if(this == &rhs) {
         return *this;
     }
@@ -89,8 +93,8 @@ BST<T>& BST<T>::operator=(const BST& rhs) {
 }
 
 // move assignment
-template<typename T>
-BST<T>& BST<T>::operator=(BST&& rhs) noexcept {
+template<typename T, typename Compare>
+BST<T, Compare>& BST<T, Compare>::operator=(BST&& rhs) noexcept {
     if(this == &rhs) {
         return *this;
     }
@@ -101,15 +105,15 @@ BST<T>& BST<T>::operator=(BST&& rhs) noexcept {
 }
 
 // DTOR
-template<typename T>
-BST<T>::~BST() {
+template<typename T, typename Compare>
+BST<T, Compare>::~BST() {
     clear();
 }
 
 /* -------------------------------------------------- Utility -------------------------------------------------- */
 
-template<typename T>
-size_t BST<T>::size_(const Node* root) const {
+template<typename T, typename Compare>
+size_t BST<T, Compare>::size_(const Node* root) const {
     if(!root) {
         return 0;
     }
@@ -118,8 +122,8 @@ size_t BST<T>::size_(const Node* root) const {
     return leftSize + rightSize + 1;
 }
 
-template<typename T>
-size_t BST<T>::height_(const Node* root) const {
+template<typename T, typename Compare>
+size_t BST<T, Compare>::height_(const Node* root) const {
     if(!root) {
         return 0;
     }
@@ -128,19 +132,19 @@ size_t BST<T>::height_(const Node* root) const {
     return std::max(leftHeight, rightHeight) + 1;
 }
 
-template<typename T>
-bool BST<T>::search_(const T& val, const Node* root) const {
+template<typename T, typename Compare>
+bool BST<T, Compare>::search_(const T& val, const Node* root) const {
     if(!root) {
         return false;
     }
-    if(val == root->val) {
+    if(equals(val, root->val)) {
         return true;
     }
-    return search_(val, val < root->val ? root->left : root->right);
+    return search_(val, less(val, root->val) ? root->left : root->right);
 }
 
-template<typename T>
-std::optional<T> BST<T>::min() const {
+template<typename T, typename Compare>
+std::optional<T> BST<T, Compare>::min() const {
     // empty tree case
     if(!root_) {
         return std::nullopt;
@@ -153,8 +157,8 @@ std::optional<T> BST<T>::min() const {
     return it->val;
 }
 
-template<typename T>
-std::optional<T> BST<T>::max() const {
+template<typename T, typename Compare>
+std::optional<T> BST<T, Compare>::max() const {
     // empty tree case
     if(!root_) {
         return std::nullopt;
@@ -169,15 +173,15 @@ std::optional<T> BST<T>::max() const {
 
 /* -------------------------------------------------- Modifiers -------------------------------------------------- */
 
-template<typename T>
-typename BST<T>::Node* BST<T>::insert_(const T& val, Node* root) {
+template<typename T, typename Compare>
+typename BST<T, Compare>::Node* BST<T, Compare>::insert_(const T& val, Node* root) {
     if(!root) {
         return new Node{val};
     }
-    if(val == root->val) {
+    if(equals(val, root->val)) {
         return root;
     }
-    else if(val < root->val) {
+    else if(less(val, root->val)) {
         root->left = insert_(val, root->left);
     } 
     else {
@@ -186,15 +190,15 @@ typename BST<T>::Node* BST<T>::insert_(const T& val, Node* root) {
     return root;
 }
 
-template<typename T>
-typename BST<T>::Node* BST<T>::remove_(const T& val, Node* root) {
+template<typename T, typename Compare>
+typename BST<T, Compare>::Node* BST<T, Compare>::remove_(const T& val, Node* root) {
     if(!root) {
         return nullptr;
     }
-    if(val < root->val) {
+    if(less(val, root->val)) {
         root->left = remove_(val, root->left);
     } 
-    else if(val > root->val) {
+    else if(greater(val, root->val)) {
         root->right = remove_(val, root->right);
     }
     else {
@@ -228,14 +232,14 @@ typename BST<T>::Node* BST<T>::remove_(const T& val, Node* root) {
     return root;
 }
 
-template<typename T>
-void BST<T>::clear() {
+template<typename T, typename Compare>
+void BST<T, Compare>::clear() {
     clear_(root_);
     root_ = nullptr;
 }
 
-template <typename T>
-void BST<T>::clear_(Node* root) {
+template<typename T, typename Compare>
+void BST<T, Compare>::clear_(Node* root) {
     if(!root) {
         return;
     }
@@ -246,8 +250,8 @@ void BST<T>::clear_(Node* root) {
 
 /* -------------------------------------------------- Traversal -------------------------------------------------- */
 
-template<typename T>
-void BST<T>::preOrder_(cb_t cb, Node* root) {
+template<typename T, typename Compare>
+void BST<T, Compare>::preOrder_(cb_t cb, Node* root) {
     if(!root) {
         return;
     }
@@ -256,8 +260,8 @@ void BST<T>::preOrder_(cb_t cb, Node* root) {
     preOrder_(cb, root->right);
 }
 
-template<typename T>
-void BST<T>::inOrder_(cb_t cb, Node* root) {
+template<typename T, typename Compare>
+void BST<T, Compare>::inOrder_(cb_t cb, Node* root) {
     if(!root) {
         return;
     }
@@ -266,8 +270,8 @@ void BST<T>::inOrder_(cb_t cb, Node* root) {
     inOrder_(cb, root->right);
 }
 
-template<typename T>
-void BST<T>::postOrder_(cb_t cb, Node* root) {
+template<typename T, typename Compare>
+void BST<T, Compare>::postOrder_(cb_t cb, Node* root) {
     if(!root) {
         return;
     }
@@ -276,8 +280,8 @@ void BST<T>::postOrder_(cb_t cb, Node* root) {
     cb(root->val);
 }
 
-template<typename T>
-void BST<T>::levelOrder(cb_t cb) {
+template<typename T, typename Compare>
+void BST<T, Compare>::levelOrder(cb_t cb) {
     if(!root_) {
         return;
     }
@@ -298,8 +302,8 @@ void BST<T>::levelOrder(cb_t cb) {
 
 /* -------------------------------------------------- Other -------------------------------------------------- */
 
-template<typename T>
-typename BST<T>::Node* BST<T>::clone_(const Node* root) {
+template<typename T, typename Compare>
+typename BST<T, Compare>::Node* BST<T, Compare>::clone_(const Node* root) {
     if(!root) {
         return nullptr;
     }
