@@ -19,9 +19,24 @@ class BST {
         T val;
         Node* left;
         Node* right;
-        Node(T val, Node* left = nullptr, Node* right = nullptr) : val{val}, left{left}, right{right} {}
+        Node* parent;
+        Node(T val, Node* parent = nullptr, Node* left = nullptr, Node* right = nullptr) : val{val}, parent{parent}, left{left}, right{right}  {}
     };
 public:
+    class Iterator {
+    public:
+        Iterator(Node* node) : node_{node} {}
+        T& operator*() { return node_->val;}  
+        Iterator& operator++() { node_ = inOrderSuccessor(node_); return *this; }
+        Iterator& operator--() { node_ = inOrderPredecessor(node_); return *this; }
+        bool operator==(const Iterator& rhs) const { return node_ == rhs.node_; }
+        bool operator!=(const Iterator& rhs) const { return node_ != rhs.node_; }
+
+    private:
+        Node* node_ = nullptr;
+    };
+
+
     BST() = default;
     BST(std::initializer_list<T> list);
     BST(const BST& rhs);
@@ -53,12 +68,13 @@ private:
     size_t height_(const Node* root) const;
     template<typename U>
     bool search_(const U& x, const Node* root) const;
-    Node* insert_(const T& val, Node* root);
+    Node* insert_(const T& val, Node* root, Node* parent = nullptr);
     template<typename U>
     Node* remove_(const U& x, Node* root);
     void clear_(Node* root);
-    Node* clone_(const Node* root);
-
+    Node* clone_(const Node* root, const Node* parent = nullptr);
+    Node* inOrderSuccessor(const Node* root) const { return nullptr; } // in progress
+    Node* inOrderPredecessor(const Node* root) const { return nullptr; } // in progress
     void preOrder_(cb_t cb, Node* root);
     void inOrder_(cb_t cb, Node* root);
     void postOrder_(cb_t cb, Node* root);
@@ -180,18 +196,18 @@ std::optional<T> BST<T, Comp>::max() const {
 /* -------------------------------------------------- Modifiers -------------------------------------------------- */
 
 template<typename T, typename Comp>
-typename BST<T, Comp>::Node* BST<T, Comp>::insert_(const T& val, Node* root) {
+typename BST<T, Comp>::Node* BST<T, Comp>::insert_(const T& val, Node* root, Node* parent) {
     if(!root) {
-        return new Node{val};
+        return new Node{val, parent};
     }
     if(equals(val, root->val)) {
         return root;
     }
     else if(less(val, root->val)) {
-        root->left = insert_(val, root->left);
+        root->left = insert_(val, root->left, root);
     } 
     else {
-        root->right = insert_(val, root->right);
+        root->right = insert_(val, root->right, root);
     }
     return root;
 }
@@ -217,11 +233,13 @@ typename BST<T, Comp>::Node* BST<T, Comp>::remove_(const U& x, Node* root) {
         // Case 2: 1 child
         else if(!root->left && root->right) {
             Node* tmp = root->right;
+            tmp->parent = root->parent;
             delete root;
             root = tmp;
         } 
         else if(root->left && !root->right){
             Node* tmp = root->left;
+            tmp->parent = root->parent;
             delete root;
             root = tmp;
         }
@@ -310,12 +328,12 @@ void BST<T, Comp>::levelOrder(cb_t cb) {
 /* -------------------------------------------------- Other -------------------------------------------------- */
 
 template<typename T, typename Comp>
-typename BST<T, Comp>::Node* BST<T, Comp>::clone_(const Node* root) {
+typename BST<T, Comp>::Node* BST<T, Comp>::clone_(const Node* root, const Node* parent) {
     if(!root) {
         return nullptr;
     }
-    Node* tmp = new Node{root->val};
-    tmp->left = clone_(root->left);
-    tmp->right = clone_(root->right);
+    Node* tmp = new Node{root->val, parent};
+    tmp->left = clone_(root->left, tmp);
+    tmp->right = clone_(root->right, tmp);
     return tmp;
 }
