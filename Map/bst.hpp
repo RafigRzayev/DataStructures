@@ -7,6 +7,15 @@
 #include <functional>
 #include <queue>
 
+/* Binary Search Tree implementation for Map:
+ * - Since a map is using key-value pairs, need to enable users to specify bst insertion logic according to the keys only.
+ *   Thus, comparator template argument has been added.
+ * - In order to support ++/-- on the map's iterators, parent information has been added to the node,
+ *   iterator class has been provided, and inOrderSuccessor() function has been added.
+ * - search() has been reworked to support searching by key only, so that map doesn't have to construct dummy "value" pairs. 
+ * - insert(), clone(), remove() reworked to handle parent information
+ * New features in progress.
+ * */
 template <typename T, typename Comp = std::less<T>>
 class BST {
     using cb_t = std::function<void(T&)>;
