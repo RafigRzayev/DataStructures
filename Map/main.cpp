@@ -2,11 +2,12 @@
 #include "map.hpp"
 #include <utility>
 #include <map>
+
 int main() {
 
     struct mycomp {
         bool operator()(const int& a, const int& b) const {
-            return a < b;
+            return a > b;
         }
     };
     Map<int, double, mycomp> map;
@@ -26,7 +27,11 @@ int main() {
         std::cout << "yes\n";
     }
     map.print();
+    for(auto& el : map) {
+        
+    }
     //at/find/extract/max-size/lower bound/upper bound//merge
+
     
     return 0;
 }

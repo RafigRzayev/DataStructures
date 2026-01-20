@@ -9,7 +9,7 @@
 template<typename K, typename V, typename KeyComp = std::less<K>>
 class Map {
 public:
-    using val_t = std::pair<K, V>;
+    using val_t = std::pair<const K, V>;
     struct ValueComp {
         KeyComp keyComp;
         bool operator()(const val_t& lhs, const val_t& rhs) const {
@@ -31,11 +31,13 @@ public:
     void clear() { bst.clear(); }   
     KeyComp GetKeyComp() const { return KeyComp(); }
     ValueComp GetValueComp() const { return ValueComp(); }
-    //void forEach(callback_t f);
+
+    using iterator_t = typename BST<val_t, ValueComp>::Iterator;
+    iterator_t begin() const { return bst.begin(); }
+    iterator_t end() const { return bst.end(); }
 
     void print();
 private:
-
     BST<val_t, ValueComp> bst;
 };
 

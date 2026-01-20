@@ -45,6 +45,9 @@ public:
     BST& operator=(BST&& rhs) noexcept;
     ~BST();
 
+    Iterator begin() const;
+    Iterator end() const { return nullptr;}
+
     bool empty() const { return !root_; }
     size_t size() const { return size_(root_); }
     size_t height() const { return height_(root_);}
@@ -74,8 +77,8 @@ private:
     void clear_(Node* root);
     Node* clone_(const Node* root, const Node* parent = nullptr);
 
-    Node* inOrderSuccessor(const Node* root) const; 
-    Node* inOrderPredecessor(const Node* root) const { return nullptr; } // in progress
+    static Node* inOrderSuccessor(Node* root); 
+    static Node* inOrderPredecessor(const Node* root) { return nullptr; } // in progress
     void preOrder_(cb_t cb, Node* root);
     void inOrder_(cb_t cb, Node* root);
     void postOrder_(cb_t cb, Node* root);
@@ -178,6 +181,18 @@ std::optional<T> BST<T, Comp>::min() const {
         it = it->left;
     }
     return it->val;
+}
+
+template<typename T, typename Comp>
+typename BST<T, Comp>::Iterator BST<T, Comp>::begin() const {
+    Node* it = root_;
+    if(!it) {
+        return it;
+    }
+    while(it->left) {
+        it = it->left;
+    }
+    return it;
 }
 
 template<typename T, typename Comp>
@@ -327,38 +342,32 @@ void BST<T, Comp>::levelOrder(cb_t cb) {
 }
 
 template<typename T, typename Comp>
-typename BST<T, Comp>::Node* BST<T, Comp>::inOrderSuccessor(const Node* root) const {
-    if(!root) {
+typename BST<T, Comp>::Node* BST<T, Comp>::inOrderSuccessor(Node* node) {
+    if(!node) {
         return nullptr;
     }
     // Case 1: has right sub-tree
-    if(root->right)  {
+    if(node->right)  {
         // find left-most element in the right sub-tree
-        Node* it = root->right;
-        while(it->left) {
-            it = it->left;
+        node = node->right;
+        while(node->left) {
+            node = node->left;
         }
-        return it;
-    } else {
-        // is to the left of the parent
-        if(less(root->val, root->parent->val)) {
-            return root->parent;
-        }
-        // is to the right of the parent 
-        else {
-            Node* parent = root->parent;
-            while(parent && greater(root->val, parent->val)) {
-                parent = parent->parent;
-            }
-            return parent;
-        }
+        return node;
     }
+    // Case 2: has no right sub-tree
+    Node* parent = node->parent;
+    while(parent && node == parent->right) {
+        node = parent;
+        parent = parent->parent;
+    }
+    return parent;
 }
 
-template<typename T, typename Comp>
-typename BST<T, Comp>::Node* BST<T, Comp>::inOrderPredecessor(const Node* root) const {
-
-}
+//template<typename T, typename Comp>
+//typename BST<T, Comp>::Node* BST<T, Comp>::inOrderPredecessor(const Node* root) {
+//
+//}
 
 /* -------------------------------------------------- Other -------------------------------------------------- */
 
