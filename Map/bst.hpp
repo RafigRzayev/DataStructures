@@ -73,7 +73,8 @@ private:
     Node* remove_(const U& x, Node* root);
     void clear_(Node* root);
     Node* clone_(const Node* root, const Node* parent = nullptr);
-    Node* inOrderSuccessor(const Node* root) const { return nullptr; } // in progress
+
+    Node* inOrderSuccessor(const Node* root) const; 
     Node* inOrderPredecessor(const Node* root) const { return nullptr; } // in progress
     void preOrder_(cb_t cb, Node* root);
     void inOrder_(cb_t cb, Node* root);
@@ -323,6 +324,40 @@ void BST<T, Comp>::levelOrder(cb_t cb) {
         }
         queue.pop();
     }
+}
+
+template<typename T, typename Comp>
+typename BST<T, Comp>::Node* BST<T, Comp>::inOrderSuccessor(const Node* root) const {
+    if(!root) {
+        return nullptr;
+    }
+    // Case 1: has right sub-tree
+    if(root->right)  {
+        // find left-most element in the right sub-tree
+        Node* it = root->right;
+        while(it->left) {
+            it = it->left;
+        }
+        return it;
+    } else {
+        // is to the left of the parent
+        if(less(root->val, root->parent->val)) {
+            return root->parent;
+        }
+        // is to the right of the parent 
+        else {
+            Node* parent = root->parent;
+            while(parent && greater(root->val, parent->val)) {
+                parent = parent->parent;
+            }
+            return parent;
+        }
+    }
+}
+
+template<typename T, typename Comp>
+typename BST<T, Comp>::Node* BST<T, Comp>::inOrderPredecessor(const Node* root) const {
+
 }
 
 /* -------------------------------------------------- Other -------------------------------------------------- */
