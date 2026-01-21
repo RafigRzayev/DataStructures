@@ -5,6 +5,8 @@
 
 int main() {
 
+    std::map<int, double> smap;
+    smap[5] = 3.5;
     struct mycomp {
         bool operator()(const int& a, const int& b) const {
             return a > b;
@@ -27,9 +29,8 @@ int main() {
         std::cout << "yes\n";
     }
     map.print();
-    for(auto& el : map) {
-        
-    }
+    auto it = map.find(-5);
+    std::cout << it->first << " " << it->second << std::endl;
     //at/find/extract/max-size/lower bound/upper bound//merge
 
     

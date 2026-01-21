@@ -36,8 +36,8 @@ public:
     public:
         Iterator(Node* node) : node_{node} {}
         T& operator*() { return node_->val;}  
+        T* operator->() { return &node_->val; }
         Iterator& operator++() { node_ = inOrderSuccessor(node_); return *this; }
-        Iterator& operator--() { node_ = inOrderPredecessor(node_); return *this; }
         bool operator==(const Iterator& rhs) const { return node_ == rhs.node_; }
         bool operator!=(const Iterator& rhs) const { return node_ != rhs.node_; }
 
@@ -63,6 +63,8 @@ public:
 
     template<typename U>
     bool search(const U& x) const { return search_(x, root_);}
+    template<typename U>
+    Iterator find(const U& x) { return find_(x, root_); }
     std::optional<T> min() const;
     std::optional<T> max() const;
 
@@ -80,6 +82,8 @@ private:
     size_t height_(const Node* root) const;
     template<typename U>
     bool search_(const U& x, const Node* root) const;
+    template<typename U>
+    Iterator find_(const U& x, Node* root);
     Node* insert_(const T& val, Node* root, Node* parent = nullptr);
     template<typename U>
     Node* remove_(const U& x, Node* root);
@@ -176,6 +180,18 @@ bool BST<T, Comp>::search_(const U& x, const Node* root) const {
         return true;
     }
     return search_(x, comp(x, root->val) ? root->left : root->right);
+}
+
+template<typename T, typename Comp>
+template<typename U>
+typename BST<T, Comp>::Iterator BST<T, Comp>::find_(const U& x, Node* root) {
+    if(!root) {
+        return Iterator(nullptr);
+    }
+    if(!comp(x, root->val) && !comp(root->val, x)) {
+        return Iterator(root);
+    }
+    return find_(x, comp(x, root->val) ? root->left : root->right);
 }
 
 template<typename T, typename Comp>
@@ -372,11 +388,6 @@ typename BST<T, Comp>::Node* BST<T, Comp>::inOrderSuccessor(Node* node) {
     }
     return parent;
 }
-
-//template<typename T, typename Comp>
-//typename BST<T, Comp>::Node* BST<T, Comp>::inOrderPredecessor(const Node* root) {
-//
-//}
 
 /* -------------------------------------------------- Other -------------------------------------------------- */
 

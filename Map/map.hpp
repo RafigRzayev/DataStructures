@@ -35,6 +35,9 @@ public:
     using iterator_t = typename BST<val_t, ValueComp>::Iterator;
     iterator_t begin() const { return bst.begin(); }
     iterator_t end() const { return bst.end(); }
+    iterator_t find(const K& key) { return bst.find(key); }
+
+    V& operator[](const K& key);
 
     void print();
 private:
@@ -44,5 +47,15 @@ private:
 template<typename K, typename V, typename KeyComp>
 void Map<K,V, KeyComp>::print() {
     bst.inOrder([](val_t& el) { std::cout << el.first << " " << el.second << "\n"; });
+}
+
+template<typename K, typename V, typename KeyComp>
+V& Map<K,V, KeyComp>::operator[](const K& key) {
+    auto it = bst.find(key);
+    if(!it) {
+        bst.insert(std::make_pair<key, V{}>);
+        it = bst.find(key);
+    }
+    return it->second;
 }
 
